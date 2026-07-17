@@ -1,0 +1,25 @@
+.container {
+    padding: 1rem 0;
+}
+
+.search {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    outline: none;
+}
+
+.search:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.2);
+}
+
+.no-results {
+    text-align: center;
+    color: var(--text-light);
+    margin-top: 2rem;
+}

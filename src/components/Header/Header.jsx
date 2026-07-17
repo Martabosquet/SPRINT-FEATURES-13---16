@@ -13,7 +13,12 @@ export default function Header() {
         </Link>
 
         {/* Botón de menú móvil */}
-        <button className={styles['menu-toggle']} onClick={() => setIsOpen(!isOpen)}>
+        <button 
+          className={styles['menu-toggle']} 
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
+          aria-expanded={isOpen}
+        >
           ☰
         </button>
 
