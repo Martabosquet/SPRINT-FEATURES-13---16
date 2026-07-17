@@ -17,6 +17,12 @@ export default function LoginPage() {
             const response = await api.post('/api/auth/login', { email, password });
             if (response.data.ok) {
                 localStorage.setItem('token', response.data.token);
+                // Guardamos el nombre para poder mostrarlo luego en el Navbar
+                localStorage.setItem('userName', response.data.user?.name || 'Usuario');
+
+                // Avisamos a toda la app de que el estado de sesión ha cambiado
+                window.dispatchEvent(new Event('authChange'));
+
                 alert('¡Inicio de sesión correcto!');
                 navigate('/products');
             }
