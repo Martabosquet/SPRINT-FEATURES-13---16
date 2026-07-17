@@ -9,19 +9,24 @@ export default function ProductCard({ product }) {
     setImgSrc('https://placehold.co/300x200?text=Sin+Imagen');
   };
 
+  // Sacamos el ID idóneo (sea id de Postgres o _id de Mongo)
+  const correctedId = product.id || product._id;
+
   return (
     <div className={styles.card}>
-      <img 
-        src={imgSrc} 
-        alt={product.name} 
-        className={styles.image} 
-        onError={handleImageError} 
+      <img
+        src={imgSrc}
+        alt={product.name}
+        className={styles.image}
+        onError={handleImageError}
       />
       <div className={styles.content}>
         <h3 className={styles.title}>{product.name}</h3>
         <p className={styles.price}>{product.price} €</p>
-        <Link 
-          to={`/products/${product.id}`} 
+
+        {/* Usamos el identificador corregido que encontramos arriba */}
+        <Link
+          to={`/products/${correctedId}`}
           className={styles.button}
           aria-label={`Ver detalle del producto ${product.name}`}
         >
