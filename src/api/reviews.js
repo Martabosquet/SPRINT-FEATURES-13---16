@@ -1,7 +1,7 @@
 import api from './axios';
 
-// Obtiene los comentarios asociados a un identificador de producto específico
+// Obtiene las reviews de un producto específico
 export const getReviews = async (productId) => {
-    const response = await api.get(`/reviews?productId=${productId}`);
-    return response.data; // Retorna el array de reviews
+    const response = await api.get(`/api/products/${productId}/reviews`); //lo conecto a la ruta del back-end
+    return response.data.data; // Extrae el array de reviews del JSON del backend
 };
