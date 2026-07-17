@@ -1,0 +1,9 @@
+:root {
+  --primary-color: #e53e3e;
+  --primary-hover: #c53030;
+  --bg-color: #f7fafc;
+  --text-color: #2d3748;
+  --text-light: #718096;
+  --card-bg: #ffffff;
+  --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
