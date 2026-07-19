@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useProduct } from '../../hooks/useProduct';
 import { useReviews } from '../../hooks/useReviews';
+import ReviewList from '../../components/ReviewList/ReviewList';
 import styles from './ProductDetailPage.module.css';
 
 export default function ProductDetailPage() {
@@ -77,51 +78,10 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      {/* SECCIÓN DE VALORACIONES (REVIEWS) */}
+      {/* SECCIÓN DE VALORACIONES — delegada al componente ReviewList */}
       <div style={{ borderTop: '1px solid #eee', paddingTop: '2rem' }}>
         <h2>Valoraciones del Producto</h2>
-
-        {/* Estado de carga de las reviews */}
-        {reviewsLoading && <p>Cargando comentarios...</p>}
-
-        {/* Estado de error de las reviews */}
-        {reviewsError && <p style={{ color: 'red' }}>No se pudieron cargar las valoraciones.</p>}
-
-        {/* Caso: No hay ninguna review todavía */}
-        {!reviewsLoading && !reviewsError && (!reviews || reviews.length === 0) && (
-          <p style={{ color: 'var(--text-light)', marginTop: '1rem' }}>
-            Este producto aún no tiene valoraciones. ¡Sé el primero!
-          </p>
-        )}
-
-        {/* Caso: Lista de reviews real */}
-        {!reviewsLoading && !reviewsError && reviews && reviews.length > 0 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-            {reviews.map((review) => {
-              const reviewId = review.id || review._id;
-              return (
-                <div
-                  key={reviewId}
-                  style={{ padding: '1rem', backgroundColor: '#f9f9f9', borderRadius: '8px' }}
-                >
-                  <p style={{ fontWeight: 'bold', margin: 0 }}>
-                    {review.user?.name || review.username || review.user || 'Usuario Anónimo'} {/* quiero que me busque el nombre del usuario que publicó la review */}
-                  </p>
-                  <p style={{ color: '#ffb400', margin: '0.2rem 0' }}>
-                    {'★'.repeat(Math.min(10, Math.max(0, review.rating)))}
-                    {'☆'.repeat(Math.min(10, Math.max(0, 10 - review.rating)))} {/* escala en base 10 de rating */}
-                    <span style={{ color: '#555', marginLeft: '0.5rem', fontSize: '0.9rem' }}>
-                      ({review.rating}/10)
-                    </span>
-                  </p>
-                  <p style={{ margin: 0, color: '#555' }}>
-                    {review.comment}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        )}
+        <ReviewList reviews={reviews} loading={reviewsLoading} error={reviewsError} />
       </div>
     </div>
   );

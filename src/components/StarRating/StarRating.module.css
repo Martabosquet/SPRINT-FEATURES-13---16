@@ -1,0 +1,21 @@
+.container {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0.25rem 0;
+}
+
+.stars {
+    color: #ffb400;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.empty {
+    color: #d1d5db;
+}
+
+.score {
+    font-size: 0.85rem;
+    color: #6b7280;
+}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getReviews } from '../api/reviews';
+import axios from 'axios';
 
 export function useReviews(productId) {
     const [data, setData] = useState([]);
@@ -7,21 +8,41 @@ export function useReviews(productId) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (!productId) return;
+        if (!productId) {
+            setData([]);
+            setLoading(false);
+            setError(null);
+            return;
+        }
+
+        let isMounted = true;
+        const controller = new AbortController();
 
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const reviews = await getReviews(productId);
-                setData(reviews);
+                setError(null);
+                const reviews = await getReviews(productId, { signal: controller.signal });
+                if (isMounted) {
+                    setData(reviews);
+                }
             } catch (err) {
-                setError('Error al cargar las valoraciones');
+                if (isMounted && !axios.isCancel(err)) {
+                    setError('Error al cargar las valoraciones');
+                }
             } finally {
-                setLoading(false);
+                if (isMounted) {
+                    setLoading(false);
+                }
             }
         };
 
         fetchData();
+
+        return () => {
+            isMounted = false;
+            controller.abort();
+        };
     }, [productId]); // Se vuelve a ejecutar si cambia el producto visualizado
 
     return { data, loading, error };

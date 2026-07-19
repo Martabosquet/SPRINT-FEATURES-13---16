@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getProductById } from '../api/products';
+import axios from 'axios';
 
 export function useProduct(id) {
     const [data, setData] = useState(null);
@@ -8,21 +9,42 @@ export function useProduct(id) {
 
     useEffect(() => {
         // Si no viene un ID válido, no hacemos la petición
-        if (!id) return;
+        if (!id) {
+            setData(null);
+            setLoading(false);
+            setError(null);
+            return;
+        }
+
+        let isMounted = true;
+        const controller = new AbortController();
 
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const product = await getProductById(id);
-                setData(product);
+                setError(null);
+                const product = await getProductById(id, { signal: controller.signal });
+                if (isMounted) {
+                    setData(product);
+                }
             } catch (err) {
-                setError('Error al cargar el detalle del producto');
+                if (isMounted && !axios.isCancel(err)) {
+                    setError('Error al cargar el detalle del producto');
+                    setData(null);
+                }
             } finally {
-                setLoading(false);
+                if (isMounted) {
+                    setLoading(false);
+                }
             }
         };
 
         fetchData();
+
+        return () => {
+            isMounted = false;
+            controller.abort();
+        };
     }, [id]); // Dependencia [id]: si el usuario pasa a otro producto, el efecto se vuelve a ejecutar
 
     return { data, loading, error };

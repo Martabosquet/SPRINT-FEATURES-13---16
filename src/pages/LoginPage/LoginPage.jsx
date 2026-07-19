@@ -1,64 +1,101 @@
-import { useRef } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../../api/axios';
-import styles from './LoginPage.module.css'; // Importación vinculada
+import FormInput from '../../components/FormInput/FormInput';
+import Button from '../../components/Button/Button';
+import styles from './LoginPage.module.css';
+
+// Función auxiliar para validar el formato de un email
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
 export default function LoginPage() {
-    const emailRef = useRef(null);
-    const passwordRef = useRef(null);
+    // Estado controlado: cada campo del formulario tiene su propio estado
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    // Estado para los errores de validación de cada campo
+    const [errors, setErrors] = useState({});
+
+    // Estado para el error general de la petición (ej: credenciales incorrectas)
+    const [submitError, setSubmitError] = useState('');
+
     const navigate = useNavigate();
+
+    // Validación previa al envío del formulario
+    const validate = () => {
+        const newErrors = {};
+        if (!email) {
+            newErrors.email = 'El email es obligatorio.';
+        } else if (!isValidEmail(email)) {
+            newErrors.email = 'Introduce un email con formato válido.';
+        }
+        if (!password) {
+            newErrors.password = 'La contraseña es obligatoria.';
+        }
+        return newErrors;
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const email = emailRef.current.value;
-        const password = passwordRef.current.value;
+        setSubmitError('');
 
+        // Ejecutamos la validación antes de enviar la petición
+        const validationErrors = validate();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
+
+        // Si no hay errores, limpiamos y enviamos
+        setErrors({});
         try {
             const response = await api.post('/api/auth/login', { email, password });
             if (response.data.ok) {
-                localStorage.setItem('token', response.data.token);
-                // Guardamos el nombre para poder mostrarlo luego en el Navbar
+                // El token ya está en la cookie httpOnly, no hace falta (ni se puede) guardarlo aquí
                 localStorage.setItem('userName', response.data.user?.name || 'Usuario');
 
                 // Avisamos a toda la app de que el estado de sesión ha cambiado
                 window.dispatchEvent(new Event('authChange'));
 
-                alert('¡Inicio de sesión correcto!');
                 navigate('/products');
             }
         } catch (error) {
             console.error('Error al iniciar sesión:', error);
-            alert(error.response?.data?.error || 'Error al iniciar sesión');
+            setSubmitError(error.response?.data?.error || 'Email o contraseña incorrectos.');
         }
     };
 
     return (
         <div className={styles.container}>
             <h2 className={styles.title}>Iniciar Sesión</h2>
-            <form onSubmit={handleSubmit} className={styles.form}>
-                <div className={styles.inputGroup}>
-                    <label htmlFor="email" className={styles.label}>Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        ref={emailRef}
-                        required
-                        className={styles.input}
-                    />
-                </div>
-                <div className={styles.inputGroup}>
-                    <label htmlFor="password" className={styles.label}>Contraseña:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        ref={passwordRef}
-                        required
-                        className={styles.input}
-                    />
-                </div>
-                <button type="submit" className={styles.button}>
+            <form onSubmit={handleSubmit} className={styles.form} noValidate>
+                {/* autoFocus en el primer campo gracias al componente FormInput */}
+                <FormInput
+                    label="Email:"
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    error={errors.email}
+                    autoFocus
+                />
+                <FormInput
+                    label="Contraseña:"
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    error={errors.password}
+                />
+
+                {/* Error general de la petición (respuesta del servidor) */}
+                {submitError && <p className={styles.submitError}>{submitError}</p>}
+
+                <Button type="submit" variant="primary">
                     Entrar
-                </button>
+                </Button>
             </form>
             <p className={styles.textFooter}>
                 ¿No tienes cuenta? <Link to="/register" className={styles.link}>Regístrate aquí</Link>

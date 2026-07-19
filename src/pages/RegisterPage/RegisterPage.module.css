@@ -82,3 +82,13 @@
 .link:hover {
     text-decoration: underline;
 }
+
+.submitError {
+    font-size: 0.875rem;
+    color: #e53e3e;
+    text-align: center;
+    padding: 0.5rem 0.75rem;
+    background-color: #fff5f5;
+    border: 1px solid #feb2b2;
+    border-radius: 6px;
+}
