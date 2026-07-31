@@ -1,21 +1,58 @@
 import { useSelector, useDispatch } from 'react-redux';
 import CartSummary from '../../components/CartSummary/CartSummary';
 import StatusMessage from '../../components/StatusMessage/StatusMessage';
-import { removeItem } from '../../api/cart';
-import { removeLocalCartItem } from '../../store/cartSlice';
+import { removeItem, addCartItem, decreaseItemQuantity } from '../../api/cart';
+import { removeLocalCartItem, addLocalCartItem } from '../../store/cartSlice';
 import styles from './CartPage.module.css';
 
 function CartPage() {
   const dispatch = useDispatch();
   const items = useSelector((state) => state.cart.items);
 
-  const handleRemove = async (productId) => {
+  const handleIncrease = async (item) => {
+    const targetId = item.productId || item.id;
+    const maxStock = item.stock ?? 10;
+
+    if (item.quantity >= maxStock) return;
+
     try {
-      // 1. Petición al backend para borrar el ítem de la base de datos
-      await removeItem(productId);
+      await addCartItem(targetId, 1);
+      dispatch(addLocalCartItem({
+        productId: targetId,
+        quantity: 1
+      }));
+    } catch (error) {
+      console.error('Error al incrementar la cantidad', error);
+    }
+  };
+
+  const handleDecrease = async (item) => {
+    const cartItemId = item.id; // ID del registro en el carrito
+    const productId = item.productId || item.id;
+
+    if (item.quantity <= 1) {
+      handleRemove(cartItemId);
+      return;
+    }
+
+    try {
+      // Usamos exactamente la misma llamada que tenías antes de tocar el stock
+      await decreaseItemQuantity(cartItemId, 1);
       
-      // 2. Actualizamos el estado global de Redux para que desaparezca al instante
-      dispatch(removeLocalCartItem(productId));
+      dispatch(addLocalCartItem({
+        productId: productId,
+        quantity: -1
+      }));
+    } catch (error) {
+      console.error('Error al disminuir la cantidad', error);
+    }
+  };
+
+  const handleRemove = async (cartItemId) => {
+    try {
+      // Usamos el ID del registro del carrito que el backend espera
+      await removeItem(cartItemId);
+      dispatch(removeLocalCartItem(cartItemId));
     } catch (error) {
       console.error('Error al eliminar el producto del carrito', error);
     }
@@ -30,14 +67,16 @@ function CartPage() {
 
       {items.length === 0 ? (
         <StatusMessage
-          title="Carrito vacio"
-          description="Anade productos para comprobar el flujo completo."
+          title="Carrito vacío"
+          description="Añade productos para comprobar el flujo completo."
         />
       ) : (
         <section className={styles.layout}>
           <div className={styles.list}>
             {items.map((item) => {
-              const targetId = item.productId || item.id;
+              const targetId = item.id || item.productId;
+              const maxStock = item.stock ?? 10;
+              const isAtMax = item.quantity >= maxStock;
               
               return (
                 <article key={targetId} className={styles.item}>
@@ -47,20 +86,47 @@ function CartPage() {
                   <div className={styles.itemDetails}>
                     <p className={styles.name}><strong>{item.name || 'Producto'}</strong></p>
                     <p className={styles.price}>Precio: {item.price} €</p>
-                    <p className={styles.quantity}>Cantidad: {item.quantity}</p>
+                    
+                    <p className={styles.stockInfo}>
+                      Stock disponible: <strong>{maxStock}</strong>
+                    </p>
+                    
+                    <div className={styles.quantityControls}>
+                      <button 
+                        type="button" 
+                        className={styles.btnControl} 
+                        onClick={() => handleDecrease(item)}
+                      >
+                        -
+                      </button>
+                      <span>Cantidad: {item.quantity}</span>
+                      <button 
+                        type="button" 
+                        className={styles.btnControl} 
+                        onClick={() => handleIncrease(item)}
+                        disabled={isAtMax}
+                        title={isAtMax ? "Límite máximo de stock alcanzado" : ""}
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    {isAtMax && (
+                      <span className={styles.warning}>Límite de stock alcanzado</span>
+                    )}
                   </div>
 
                   <button
                     type="button"
                     className={styles.btnRemove}
                     onClick={() => handleRemove(item.id)}
-                  >Eliminar
+                  >
+                    Eliminar
                   </button>
                 </article>
               );
             })}
           </div>
-
           <CartSummary items={items} />
         </section>
       )}

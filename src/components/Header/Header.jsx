@@ -1,33 +1,37 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useSelector } from "react-redux"
+import { useSelector } from "react-redux";
 import styles from './Header.module.css';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  // Guardamos el nombre del usuario logueado (o null si no hay sesión)
   const [userName, setUserName] = useState(localStorage.getItem('userName'));
   const navigate = useNavigate();
-  const cartItems = useSelector((state) => state.cart.items)
+  
+  const cartItems = useSelector((state) => state.cart.items);
   const totalItems = cartItems.reduce(
     (sum, item) => sum + Number(item.quantity ?? 0),
-    0,)
+    0,
+  );
 
   useEffect(() => {
-    // Vuelve a leer localStorage cuando cambia el estado de sesión (login/logout)
-    const syncAuth = () => {
-      setUserName(localStorage.getItem('userName'));
-    };
+      const syncAuth = () => {
+        setUserName(localStorage.getItem('userName'));
+      };
 
-    window.addEventListener('authChange', syncAuth);
-    // Por si el usuario cierra sesión en otra pestaña
-    window.addEventListener('storage', syncAuth);
+      // Escuchamos nuestro evento personalizado
+      window.addEventListener('authChange', syncAuth);
+      // Escuchamos cambios de storage por si acaso
+      window.addEventListener('storage', syncAuth);
 
-    return () => {
-      window.removeEventListener('authChange', syncAuth);
-      window.removeEventListener('storage', syncAuth);
-    };
-  }, []);
+      // Ejecutamos una comprobación inicial al montar por seguridad
+      syncAuth();
+
+      return () => {
+        window.removeEventListener('authChange', syncAuth);
+        window.removeEventListener('storage', syncAuth);
+      };
+    }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -75,7 +79,7 @@ export default function Header() {
             Catálogo
           </NavLink>
 
-          {/* A partir de aquí cambia según si hay sesión iniciada o no */}
+          {/* Área de usuario */}
           {userName ? (
             <div className={styles['user-area']}>
               <span className={styles.greeting}>Hola, {userName}</span>
@@ -96,16 +100,20 @@ export default function Header() {
             </NavLink>
           )}
 
-          {/* Carrito solo visible si hay sesión iniciada */}
+          {/* Carrito y bolita roja condicionados a que EXISTA SESIÓN Y HAYA ITEMS */}
           {userName && (
-            <>
+            <div className={styles['cart-area']}>
               <Link className={styles.link} to="/cart" onClick={() => setIsOpen(false)}>
                 Carrito
               </Link>
-              <div className={styles.status}>
-                <span>Cart: {totalItems}</span>
-              </div>
-            </>
+              
+              {/* La bolita roja solo se muestra si hay sesión iniciada Y totalItems > 0 */}
+              {totalItems > 0 && (
+                <div className={styles.status}>
+                  <span className={styles.badge}>{totalItems}</span>
+                </div>
+              )}
+            </div>
           )}
         </nav>
       </div>

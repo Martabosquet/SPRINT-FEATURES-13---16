@@ -136,3 +136,25 @@
     width: 100%;
   }
 }
+
+.status {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  background-color: #dc2626; /* Rojo vibrante */
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 9999px; /* Forma de píldora / círculo perfecto */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  min-width: 18px;
+  text-align: center;
+  line-height: 1;
+}

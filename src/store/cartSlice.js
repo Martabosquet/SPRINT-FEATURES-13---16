@@ -26,6 +26,7 @@ const cartSlice = createSlice({
         existingItem.quantity += quantity;
       } else {
         state.items.push({
+          id: id || targetId,
           productId: targetId,
           name,
           price: Number(price || 0),
@@ -35,7 +36,7 @@ const cartSlice = createSlice({
       }
     },
 
-    // --- NUEVO: Eliminar un ítem del estado local de Redux ---
+    // Eliminar un ítem del estado local de Redux
     removeLocalCartItem: (state, action) => {
       const targetCartItemId = action.payload;
       state.items = state.items.filter((item) => item.id !== targetCartItemId);

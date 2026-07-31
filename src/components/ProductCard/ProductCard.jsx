@@ -1,29 +1,40 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux'; // 1. Importamos useSelector
+import { useSelector } from 'react-redux';
 import styles from './ProductCard.module.css';
 
 export default function ProductCard({ product }) {
   const [imgSrc, setImgSrc] = useState(product.imageUrl);
+  const [userName, setUserName] = useState(() => localStorage.getItem('userName'));
+
+  useEffect(() => {
+    const syncAuth = () => {
+      setUserName(localStorage.getItem('userName'));
+    };
+
+    window.addEventListener('authChange', syncAuth);
+    window.addEventListener('storage', syncAuth);
+    syncAuth();
+
+    return () => {
+      window.removeEventListener('authChange', syncAuth);
+      window.removeEventListener('storage', syncAuth);
+    };
+  }, []);
 
   const handleImageError = () => {
     setImgSrc('https://placehold.co/300x200?text=Sin+Imagen');
   };
 
-  // Sacamos el ID idóneo (sea id de Postgres o _id de Mongo)
   const correctedId = product.id || product._id;
 
-  // 2. Leemos los ítems del carrito desde Redux
   const cartItems = useSelector((state) => state.cart.items);
-
-  // 3. Buscamos si esta película está en el carrito y obtenemos su cantidad
   const cartItem = cartItems.find((item) => item.id === correctedId || item.productId === correctedId);
   const quantity = cartItem ? cartItem.quantity : 0;
 
   return (
     <div className={styles.card}>
-      {/* 4. Si hay algo en el carrito para esta peli, mostramos la bolita roja */}
-      {quantity > 0 && (
+      {userName && quantity > 0 && (
         <span className={styles.badge}>{quantity}</span>
       )}
 
@@ -35,9 +46,13 @@ export default function ProductCard({ product }) {
       />
       <div className={styles.content}>
         <h3 className={styles.title}>{product.name}</h3>
-        <p className={styles.price}>{product.price} €</p>
+        <p className={styles.price}>{Number(product.price).toFixed(2)} €</p>
 
-        {/* Usamos el identificador corregido que encontramos arriba */}
+        {/* Ver el stock disponible */}
+        <p className={styles.stock}>
+          Stock disponible: <strong>{product.stock ?? 'Disponible'}</strong>
+        </p>
+
         <Link
           to={`/products/${correctedId}`}
           className={styles.button}

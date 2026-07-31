@@ -20,6 +20,9 @@ export default function ProductDetailPage() {
   const { data: product, loading: productLoading, error: productError } = useProduct(id);
   const { data: reviews, loading: reviewsLoading, error: reviewsError } = useReviews(id);
 
+  // Stock máximo disponible (por defecto 10 si no viene definido en el producto)
+  const maxStock = product?.stock ?? 10;
+
   const handleAddToCart = async () => {
     const userName = localStorage.getItem('userName');
     if (!userName) {
@@ -40,8 +43,10 @@ export default function ProductDetailPage() {
           price: Number(product.price ?? 0),
           quantity,
           imageUrl: product.imageUrl,
+          stock: maxStock, // Guardamos también el stock en el item si se requiere
         })
       );
+      navigate('/cart');
     } catch (err) {
       console.error(err);
       setAddError('No se pudo añadir el producto al carrito. Inténtalo de nuevo.');
@@ -80,30 +85,45 @@ export default function ProductDetailPage() {
         <div className={styles.info}>
           <h1>{product.name}</h1>
           <p className={styles.price}>{product.price} €</p>
+          
+          {/* --- STOCK DISPONIBLE VISIBLE --- */}
+          <p className={styles.stockInfo}>
+            Stock disponible: <strong>{maxStock} unidades</strong>
+          </p>
+
           <p>{product.description || 'Este producto no tiene descripción disponible.'}</p>
 
           <div className={styles.counter}>
             <button
+              type="button"
               className={styles['btn-counter']}
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              disabled={quantity <= 1}
             >
               -
             </button>
             <span>{quantity}</span>
             <button
+              type="button"
               className={styles['btn-counter']}
-              onClick={() => setQuantity(quantity + 1)}
+              onClick={() => setQuantity(Math.min(maxStock, quantity + 1))}
+              disabled={quantity >= maxStock}
             >
               +
             </button>
           </div>
 
+          {quantity >= maxStock && (
+            <p className={styles.stockWarning}>Has alcanzado el límite máximo de stock.</p>
+          )}
+
           <button
+            type="button"
             className={styles['btn-add']}
             onClick={handleAddToCart}
-            disabled={adding}
+            disabled={adding || maxStock === 0}
           >
-            {adding ? 'Añadiendo...' : 'Añadir al carrito'}
+            {maxStock === 0 ? 'Agotado' : adding ? 'Añadiendo...' : 'Añadir al carrito'}
           </button>
 
           {addError && <p className={styles.errorText}>{addError}</p>}
