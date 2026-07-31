@@ -1,0 +1,20 @@
+.page {
+  padding: 3rem 0;
+  text-align: center;
+}
+
+.code {
+  margin: 0;
+  color: #1d4ed8;
+  font-size: 4rem;
+  font-weight: 800;
+}
+
+.title {
+  margin: 0 0 1rem;
+}
+
+.link {
+  color: #1d4ed8;
+  font-weight: 700;
+}

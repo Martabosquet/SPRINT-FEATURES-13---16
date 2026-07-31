@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux'; // 1. Importamos useSelector
 import styles from './ProductCard.module.css';
 
 export default function ProductCard({ product }) {
@@ -12,8 +13,20 @@ export default function ProductCard({ product }) {
   // Sacamos el ID idóneo (sea id de Postgres o _id de Mongo)
   const correctedId = product.id || product._id;
 
+  // 2. Leemos los ítems del carrito desde Redux
+  const cartItems = useSelector((state) => state.cart.items);
+
+  // 3. Buscamos si esta película está en el carrito y obtenemos su cantidad
+  const cartItem = cartItems.find((item) => item.id === correctedId || item.productId === correctedId);
+  const quantity = cartItem ? cartItem.quantity : 0;
+
   return (
     <div className={styles.card}>
+      {/* 4. Si hay algo en el carrito para esta peli, mostramos la bolita roja */}
+      {quantity > 0 && (
+        <span className={styles.badge}>{quantity}</span>
+      )}
+
       <img
         src={imgSrc}
         alt={product.name}

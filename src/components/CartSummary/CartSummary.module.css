@@ -1,0 +1,25 @@
+.box {
+  padding: 1.25rem;
+  border: 1px solid #bfdbfe;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.94);
+}
+
+.label {
+  margin: 0 0 0.75rem;
+  color: #1d4ed8;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.line {
+  margin: 0.35rem 0;
+  font-weight: 600;
+}
+
+.note {
+  margin: 0.75rem 0 0;
+  color: #6b7280;
+}

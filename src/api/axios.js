@@ -1,23 +1,12 @@
 import axios from 'axios';
 
-// Vite lee automáticamente el archivo .env si estás en local, o las variables de Render si estás en internet
+// Vite lee automáticamente el archivo .env si estás en local, o las variables de entorno en producción
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
-    withCredentials: true, // <-- imprescindible para que viaje la cookie httpOnly
+    withCredentials: true, // <-- Imprescindible para que el navegador envíe y reciba las cookies httpOnly
 });
 
-// Interceptor para inyectar el token JWT en cada petición (preparado para registrar y logear usuarios)
-api.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
+// Ya no necesitamos el interceptor de request para inyectar el token manualmente,
+// porque la cookie viaja sola gracias a 'withCredentials: true'.
 
 export default api;

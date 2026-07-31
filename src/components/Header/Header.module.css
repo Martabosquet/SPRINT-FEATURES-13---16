@@ -43,6 +43,19 @@
   color: white;
 }
 
+.link {
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  background-color: #ffedd5;
+  color: #9a3412;
+  font-weight: 600;
+}
+
+.status {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
 .nav-menu {
   display: flex;
   gap: 1.5rem;

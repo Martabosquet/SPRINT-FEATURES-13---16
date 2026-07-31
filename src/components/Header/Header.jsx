@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux"
 import styles from './Header.module.css';
 
 export default function Header() {
@@ -7,6 +8,10 @@ export default function Header() {
   // Guardamos el nombre del usuario logueado (o null si no hay sesión)
   const [userName, setUserName] = useState(localStorage.getItem('userName'));
   const navigate = useNavigate();
+  const cartItems = useSelector((state) => state.cart.items)
+  const totalItems = cartItems.reduce(
+    (sum, item) => sum + Number(item.quantity ?? 0),
+    0,)
 
   useEffect(() => {
     // Vuelve a leer localStorage cuando cambia el estado de sesión (login/logout)
@@ -89,6 +94,18 @@ export default function Header() {
             >
               Iniciar sesión
             </NavLink>
+          )}
+
+          {/* Carrito solo visible si hay sesión iniciada */}
+          {userName && (
+            <>
+              <Link className={styles.link} to="/cart" onClick={() => setIsOpen(false)}>
+                Carrito
+              </Link>
+              <div className={styles.status}>
+                <span>Cart: {totalItems}</span>
+              </div>
+            </>
           )}
         </nav>
       </div>

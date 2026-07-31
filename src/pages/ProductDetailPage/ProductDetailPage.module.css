@@ -60,3 +60,47 @@
         flex-direction: column;
     }
 }
+
+.centeredMessage {
+  text-align: center;
+  padding: 2rem;
+}
+
+.centeredContainer {
+  text-align: center;
+  padding: 2rem;
+}
+
+.notFoundDescription {
+  color: var(--text-light);
+  margin-bottom: 1rem;
+}
+
+.linkPrimary {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.linkPrimary:hover {
+  text-decoration: underline;
+}
+
+.productSection {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.errorText {
+  color: red;
+  margin-top: 0.5rem;
+}
+
+.backLinkWrapper {
+  margin-top: 1rem;
+}
+
+.reviewsSection {
+  border-top: 1px solid #eee;
+  padding-top: 2rem;
+}

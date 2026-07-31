@@ -1,4 +1,9 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { getCart } from './api/cart';
+import { setLocalCart } from './store/cartSlice';
+
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 
@@ -8,34 +13,53 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import ProductDetailPage from './pages/ProductDetailPage/ProductDetailPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
-
-// RouterProvider es el componente que inicializa y conecta la configuración del router
-// (creada mediante createBrowserRouter) con la aplicación de React. Provee el contexto necesario
-// para que componentes como <Link>, <NavLink>, <Outlet> y los hooks (useParams, useNavigate, etc.) funcionen.
+import CartPage from "./pages/CartPage/CartPage";
 
 export default function App() {
+  const dispatch = useDispatch();
+
+  // Cargar el carrito del backend al iniciar o refrescar la página
+  useEffect(() => {
+    async function fetchInitialCart() {
+      try {
+        const cartData = await getCart();
+        const items = Array.isArray(cartData) ? cartData : cartData?.items || [];
+        
+        // Formateamos los ítems asegurando que tengan nombre, precio e imagen
+        const formattedItems = items.map(item => ({
+          id: item.id, // <-- Guardamos el ID del CartItem para poder usar el botón eliminar en el carrito
+          productId: item.productId || item.product?.id,
+          name: item.product?.name || 'Producto',
+          price: Number(item.product?.price || 0),
+          imageUrl: item.product?.imageUrl,
+          quantity: item.quantity
+        }));
+
+        dispatch(setLocalCart(formattedItems));
+      } catch (error) {
+        console.log('No hay sesión activa o el usuario no está logueado:', error.message);
+      }
+    }
+
+    fetchInitialCart();
+  }, [dispatch]);
+
   return (
     <Router>
       <Header />
 
-      {/* Solo el contenido central cambia según la URL */}
       <main style={{ minHeight: '80vh', padding: '2rem 1rem' }}>
         <Routes>
-          {/* --- RUTAS PÚBLICAS --- */}
           <Route path="/" element={<HomePage />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          {/* --- RUTAS PRIVADAS ---
-          <Route element={<ProtectedRoute />}>
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/admin" element={<AdminPage />} />
-          </Route> */}
-          {/* --- RUTA COMODÍN: captura cualquier URL no encontrada y muestra el error 404 --- */}
+          <Route path="/cart" element={<CartPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
+
       <Footer />
     </Router>
   );
