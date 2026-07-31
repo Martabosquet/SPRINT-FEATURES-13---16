@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useProduct } from '../../hooks/useProduct';
 import { useReviews } from '../../hooks/useReviews';
 import ReviewList from '../../components/ReviewList/ReviewList';
+import ReviewForm from '../../components/ReviewForm/ReviewForm';
 import { addCartItem } from '../../api/cart';
 import { addLocalCartItem } from '../../store/cartSlice';
 import styles from './ProductDetailPage.module.css';
@@ -13,6 +14,7 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState(null);
+  const userName = localStorage.getItem('userName');
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,8 +25,12 @@ export default function ProductDetailPage() {
   // Stock máximo disponible (por defecto 10 si no viene definido en el producto)
   const maxStock = product?.stock ?? 10;
 
+  // Función para manejar cuando se añade una review
+  const handleReviewAdded = () => {
+    window.location.reload(); // Recarga los datos para mostrar la nueva reseña
+  };
+
   const handleAddToCart = async () => {
-    const userName = localStorage.getItem('userName');
     if (!userName) {
       navigate('/login');
       return;
@@ -43,7 +49,7 @@ export default function ProductDetailPage() {
           price: Number(product.price ?? 0),
           quantity,
           imageUrl: product.imageUrl,
-          stock: maxStock, // Guardamos también el stock en el item si se requiere
+          stock: maxStock,
         })
       );
       navigate('/cart');
@@ -86,7 +92,6 @@ export default function ProductDetailPage() {
           <h1>{product.name}</h1>
           <p className={styles.price}>{product.price} €</p>
           
-          {/* --- STOCK DISPONIBLE VISIBLE --- */}
           <p className={styles.stockInfo}>
             Stock disponible: <strong>{maxStock} unidades</strong>
           </p>
@@ -136,9 +141,18 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
+      {/* Sección de valoraciones y formulario correctamente integrados */}
       <div className={styles.reviewsSection}>
         <h2>Valoraciones del Producto</h2>
         <ReviewList reviews={reviews} loading={reviewsLoading} error={reviewsError} />
+
+        {userName ? (
+          <ReviewForm productId={product.id || product._id} onReviewAdded={handleReviewAdded} />
+        ) : (
+          <p className={styles.loginPrompt}>
+            <Link to="/login">Inicia sesión</Link> para dejar una valoración.
+          </p>
+        )}
       </div>
     </div>
   );

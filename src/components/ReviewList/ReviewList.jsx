@@ -18,8 +18,10 @@ export default function ReviewList({ reviews, loading, error }) {
         <ul className={styles.list}>
             {reviews.map((review) => {
                 const reviewId = review.id || review._id;
+                console.log("Objeto review recibido:", review);
+                // 🔴 Añadimos review.userName aquí para que lo lea correctamente
                 const reviewerName =
-                    review.user?.name || review.username || review.user || 'Usuario Anónimo';
+                    review.userName || review.user?.name || review.username || review.user || 'Usuario Anónimo';
 
                 return (
                     <li key={reviewId} className={styles.reviewCard}>
