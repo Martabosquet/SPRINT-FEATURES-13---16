@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux"; // 1. Añadimos useDispatch
+import { clearCart } from "../../store/cartSlice"; // 2. Importamos clearCart (ajusta la ruta según tu estructura)
 import styles from './Header.module.css';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [userName, setUserName] = useState(localStorage.getItem('userName'));
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // 3. Inicializamos dispatch
   
   const cartItems = useSelector((state) => state.cart.items);
   const totalItems = cartItems.reduce(
@@ -19,12 +21,8 @@ export default function Header() {
         setUserName(localStorage.getItem('userName'));
       };
 
-      // Escuchamos nuestro evento personalizado
       window.addEventListener('authChange', syncAuth);
-      // Escuchamos cambios de storage por si acaso
       window.addEventListener('storage', syncAuth);
-
-      // Ejecutamos una comprobación inicial al montar por seguridad
       syncAuth();
 
       return () => {
@@ -33,9 +31,12 @@ export default function Header() {
       };
     }, []);
 
-  const handleLogout = () => {
+const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userName');
+    
+    // NO vaciamos el carrito con clearCart(), así cuando el usuario vuelva a entrar, si el backend lo tiene guardado, lo recuperará.
+    
     window.dispatchEvent(new Event('authChange'));
     setIsOpen(false);
     navigate('/');
@@ -100,14 +101,13 @@ export default function Header() {
             </NavLink>
           )}
 
-          {/* Carrito y bolita roja condicionados a que EXISTA SESIÓN Y HAYA ITEMS */}
+          {/* Carrito y bolita roja */}
           {userName && (
             <div className={styles['cart-area']}>
               <Link className={styles.link} to="/cart" onClick={() => setIsOpen(false)}>
                 Carrito
               </Link>
               
-              {/* La bolita roja solo se muestra si hay sesión iniciada Y totalItems > 0 */}
               {totalItems > 0 && (
                 <div className={styles.status}>
                   <span className={styles.badge}>{totalItems}</span>

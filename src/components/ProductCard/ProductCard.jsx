@@ -27,6 +27,8 @@ export default function ProductCard({ product }) {
   };
 
   const correctedId = product.id || product._id;
+  const maxStock = product.stock ?? 10;
+  const isAgotado = maxStock === 0;
 
   const cartItems = useSelector((state) => state.cart.items);
   const cartItem = cartItems.find((item) => item.id === correctedId || item.productId === correctedId);
@@ -34,31 +36,39 @@ export default function ProductCard({ product }) {
 
   return (
     <div className={styles.card}>
+      {/* 🔴 Bolita roja del carrito (solo si hay sesión y cantidad > 0) */}
       {userName && quantity > 0 && (
         <span className={styles.badge}>{quantity}</span>
       )}
 
-      <img
-        src={imgSrc}
-        alt={product.name}
-        className={styles.image}
-        onError={handleImageError}
-      />
+      {/* 🏷️ Etiqueta de Agotado si el stock es 0 */}
+      {isAgotado && (
+        <span className={styles.outOfStockBadge}>Agotado</span>
+      )}
+
+      <div className={styles.imageContainer}>
+        <img
+          src={imgSrc}
+          alt={product.name}
+          className={`${styles.image} ${isAgotado ? styles.grayscale : ''}`}
+          onError={handleImageError}
+        />
+      </div>
+
       <div className={styles.content}>
         <h3 className={styles.title}>{product.name}</h3>
         <p className={styles.price}>{Number(product.price).toFixed(2)} €</p>
 
-        {/* Ver el stock disponible */}
         <p className={styles.stock}>
-          Stock disponible: <strong>{product.stock ?? 'Disponible'}</strong>
+          Stock disponible: <strong>{isAgotado ? '0' : maxStock}</strong>
         </p>
 
         <Link
           to={`/products/${correctedId}`}
-          className={styles.button}
+          className={`${styles.button} ${isAgotado ? styles.disabledButton : ''}`}
           aria-label={`Ver detalle del producto ${product.name}`}
         >
-          Ver detalle
+          {isAgotado ? 'Ver detalles' : 'Ver detalle'}
         </Link>
       </div>
     </div>

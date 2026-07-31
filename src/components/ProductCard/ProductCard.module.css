@@ -56,6 +56,8 @@
   background-color: var(--primary-hover);
 }
 
+/* Burbuja items en el carrito -----------------------------------------------------------------------------*/
+
 .badge {
   position: absolute;
   top: -10px;     /* <-- CAMBIADO: la empuja hacia arriba fuera de la card */
@@ -82,4 +84,33 @@
 
 .stock strong {
   color: #2e7d32; /* Verde sutil para denotar disponibilidad */
+}
+
+/* Etiqueta de agotado flotante en la esquina superior izquierda -------------------------------------*/
+.outOfStockBadge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #64748b;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Efecto opcional para apagar un poco la imagen si está agotado */
+.grayscale {
+  filter: grayscale(80%);
+  opacity: 0.7;
+}
+
+/* Estilo para botón en estado agotado (opcional, si quieres cambiar su color) */
+.disabledButton {
+  background-color: #94a3b8;
+}
+.disabledButton:hover {
+  background-color: #64748b;
 }

@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux'; // 1. Importamos useDispatch
 import api from '../../api/axios';
+import { getCart } from '../../api/cart'; // 2. Importamos la función para obtener el carrito del backend
+import { setLocalCart } from '../../store/cartSlice'; // 3. Importamos la acción de Redux
 import FormInput from '../../components/FormInput/FormInput';
 import Button from '../../components/Button/Button';
 import styles from './LoginPage.module.css';
@@ -22,6 +25,7 @@ export default function LoginPage() {
     const [submitError, setSubmitError] = useState('');
 
     const navigate = useNavigate();
+    const dispatch = useDispatch(); // 4. Inicializamos dispatch
 
     // Validación previa al envío del formulario
     const validate = () => {
@@ -53,8 +57,18 @@ export default function LoginPage() {
         try {
             const response = await api.post('/api/auth/login', { email, password });
             if (response.data.ok) {
-                // El token ya está en la cookie httpOnly, no hace falta (ni se puede) guardarlo aquí
+                // El token ya está en la cookie httpOnly
                 localStorage.setItem('userName', response.data.user?.name || 'Usuario');
+
+                // 🔴 5. RECUPERAMOS EL CARRITO DEL USUARIO DESDE EL BACKEND
+                try {
+                    const userCart = await getCart();
+                    if (Array.isArray(userCart)) {
+                        dispatch(setLocalCart(userCart));
+                    }
+                } catch (cartError) {
+                    console.error('Error al recuperar el carrito del usuario', cartError);
+                }
 
                 // Avisamos a toda la app de que el estado de sesión ha cambiado
                 window.dispatchEvent(new Event('authChange'));
