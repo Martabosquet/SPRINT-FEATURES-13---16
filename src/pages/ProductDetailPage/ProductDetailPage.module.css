@@ -1,7 +1,10 @@
 .container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Divide la pantalla en dos columnas iguales */
     gap: 2rem;
     padding: 2rem 0;
+    align-items: start; /* Alinea los elementos arriba para que no se estiren */
+    max-height: calc(100vh - 100px); /* Opcional: limita la altura a la pantalla */
 }
 
 .image {
@@ -55,12 +58,6 @@
     background-color: var(--primary-hover);
 }
 
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-}
-
 .centeredMessage {
   text-align: center;
   padding: 2rem;
@@ -88,7 +85,7 @@
 .productSection {
   display: flex;
   gap: 2rem;
-  margin-bottom: 3rem;
+  /* Eliminamos el margin-bottom antiguo para que encaje limpio en el grid */
 }
 
 .errorText {
@@ -100,7 +97,45 @@
   margin-top: 1rem;
 }
 
+/* 🟢 SECCIÓN DE REVIEWS CON SCROLLBAR INDEPENDIENTE */
 .reviewsSection {
-  border-top: 1px solid #eee;
-  padding-top: 2rem;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-height: 80vh; /* Altura máxima para activar el scroll cuando crezcan las reviews */
+  overflow-y: auto;  /* Muestra la barra de desplazamiento vertical solo aquí */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Estilo estético para la barra de desplazamiento (opcional pero queda muy pro) */
+.reviewsSection::-webkit-scrollbar {
+  width: 8px;
+}
+
+.reviewsSection::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.reviewsSection::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.reviewsSection::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr; /* En móvil vuelven a apilarse en una sola columna */
+        max-height: none;
+    }
+    
+    .reviewsSection {
+        max-height: none; /* En móvil dejamos que fluya normal sin scroll interno forzado */
+    }
 }

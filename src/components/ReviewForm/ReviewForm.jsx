@@ -4,8 +4,14 @@ import Button from '../Button/Button';
 import styles from './ReviewForm.module.css';
 
 export default function ReviewForm({ productId, onReviewAdded }) {
-  const [rating, setRating] = useState(8); // Valor por defecto inicial (ej: 8)
+  const [rating, setRating] = useState(8);
   const [comment, setComment] = useState('');
+  
+  // 🟢 Nuevo estado para la fecha de visualización (por defecto la fecha actual en formato YYYY-MM-DD)
+  const [fechaDeVisualizacion, setFechaDeVisualizacion] = useState(
+    new Date().toISOString().split('T')[0]
+  );
+  
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -23,21 +29,28 @@ export default function ReviewForm({ productId, onReviewAdded }) {
       return;
     }
 
-    // Obtenemos el nombre actual del usuario del localStorage
+    if (!fechaDeVisualizacion) {
+      setError('Debes indicar la fecha en que viste la película.');
+      return;
+    }
+
     const currentUserName = localStorage.getItem('userName') || 'Usuario Anónimo';
 
     setSubmitting(true);
     setError('');
 
     try {
+      // 🟢 Enviamos el payload exacto que espera tu backend/Postman
       const response = await api.post(`/api/products/${productId}/reviews`, {
         rating: numericRating,
         comment,
-        userName: currentUserName, // 👈 Enviamos el nombre por si el backend lo requiere
+        fechaDeVisualizacion,
+        userName: currentUserName,
       });
 
       setComment('');
       setRating(8);
+      setFechaDeVisualizacion(new Date().toISOString().split('T')[0]);
 
       if (onReviewAdded) {
         onReviewAdded(response.data);
@@ -61,10 +74,22 @@ export default function ReviewForm({ productId, onReviewAdded }) {
           type="number"
           min="0"
           max="10"
-          step="0.5" // Permite decimales como 8.5 (puedes cambiarlo a "1" si solo quieres números enteros)
+          step="0.5"
           value={rating} 
           onChange={(e) => setRating(e.target.value)}
           className={styles.inputNumber}
+        />
+      </div>
+
+      {/* 🟢 Nuevo campo de fecha */}
+      <div className={styles.field}>
+        <label htmlFor="fechaDeVisualizacion">¿Qué día la viste?:</label>
+        <input 
+          id="fechaDeVisualizacion"
+          type="date"
+          value={fechaDeVisualizacion}
+          onChange={(e) => setFechaDeVisualizacion(e.target.value)}
+          className={styles.inputDate}
         />
       </div>
 

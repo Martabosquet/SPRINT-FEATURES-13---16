@@ -1,0 +1,29 @@
+.wishlistBtn {
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.wishlistBtn:hover {
+  transform: scale(1.1); /* Efecto de aumento al pasar el ratón por encima */
+  background-color: #f8fafc;
+}
+
+.wishlistBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* estilo adicional si quieres que el fondo cambie ligeramente cuando es favorito */
+.wishlistBtn.active {
+  border-color: #f43f5e;
+}

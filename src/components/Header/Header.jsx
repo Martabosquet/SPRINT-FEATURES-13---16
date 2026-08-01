@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from "react-redux"; // 1. Añadimos useDispatch
-import { clearCart } from "../../store/cartSlice"; // 2. Importamos clearCart (ajusta la ruta según tu estructura)
+import { useSelector, useDispatch } from "react-redux"; 
+import { clearCart } from "../../store/cartSlice"; 
 import styles from './Header.module.css';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [userName, setUserName] = useState(localStorage.getItem('userName'));
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // 3. Inicializamos dispatch
+  const dispatch = useDispatch(); 
   
   const cartItems = useSelector((state) => state.cart.items);
   const totalItems = cartItems.reduce(
@@ -16,6 +16,7 @@ export default function Header() {
     0,
   );
 
+  // Efecto para sincronizar el estado de autenticación (nombre de usuario) ante cambios en storage o eventos personalizados
   useEffect(() => {
       const syncAuth = () => {
         setUserName(localStorage.getItem('userName'));
@@ -31,11 +32,10 @@ export default function Header() {
       };
     }, []);
 
-const handleLogout = () => {
+  // Función para cerrar sesión limpiando localStorage y redirigiendo al home
+  const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userName');
-    
-    // NO vaciamos el carrito con clearCart(), así cuando el usuario vuelva a entrar, si el backend lo tiene guardado, lo recuperará.
     
     window.dispatchEvent(new Event('authChange'));
     setIsOpen(false);
@@ -45,11 +45,12 @@ const handleLogout = () => {
   return (
     <header className={styles.header}>
       <div className={styles['header-container']}>
+        {/* Logo que redirige al inicio */}
         <Link to="/" className={styles.logo} onClick={() => setIsOpen(false)}>
           MiTienda
         </Link>
 
-        {/* Botón de menú móvil */}
+        {/* Botón de menú responsive para dispositivos móviles */}
         <button
           className={styles['menu-toggle']}
           onClick={() => setIsOpen(!isOpen)}
@@ -59,7 +60,7 @@ const handleLogout = () => {
           ☰
         </button>
 
-        {/* Enlaces de navegación */}
+        {/* Enlaces de navegación principales */}
         <nav className={`${styles['nav-menu']} ${isOpen ? styles.open : ''}`}>
           <NavLink
             to="/"
@@ -70,6 +71,7 @@ const handleLogout = () => {
           >
             Inicio
           </NavLink>
+          
           <NavLink
             to="/products"
             className={({ isActive }) =>
@@ -80,7 +82,20 @@ const handleLogout = () => {
             Catálogo
           </NavLink>
 
-          {/* Área de usuario */}
+          {/* 🟢 NUEVO: Enlace a la Wishlist (visible solo si el usuario ha iniciado sesión) */}
+          {userName && (
+            <NavLink
+              to="/wishlist"
+              className={({ isActive }) =>
+                isActive ? `${styles['nav-link']} ${styles.active}` : styles['nav-link']
+              }
+              onClick={() => setIsOpen(false)}
+            >
+            ❤️
+            </NavLink>
+          )}
+
+          {/* Área de control de sesión (Usuario / Iniciar sesión) */}
           {userName ? (
             <div className={styles['user-area']}>
               <span className={styles.greeting}>Hola, {userName}</span>
@@ -101,7 +116,7 @@ const handleLogout = () => {
             </NavLink>
           )}
 
-          {/* Carrito y bolita roja */}
+          {/* Sección del carrito de compras y su indicador numérico */}
           {userName && (
             <div className={styles['cart-area']}>
               <Link className={styles.link} to="/cart" onClick={() => setIsOpen(false)}>

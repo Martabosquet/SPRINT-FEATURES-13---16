@@ -53,3 +53,12 @@
   font-family: inherit;
   width: 120px;
 }
+
+.inputDate {
+  padding: 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  width: 180px;
+}

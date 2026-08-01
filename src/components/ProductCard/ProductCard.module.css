@@ -3,7 +3,7 @@
   background-color: var(--card-bg);
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  overflow: visible;
+  overflow: visible; /* Permite que elementos flotantes (como la burbuja del carrito) sobresalgan si es necesario */
   display: flex;
   flex-direction: column;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -14,10 +14,27 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.image {
+/* 🟢 1. Contenedor de la imagen con position: relative para servir de referencia al corazón */
+.imageContainer {
+  position: relative; 
   width: 100%;
   height: 200px;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  border-top-left-radius: 8px; /* Mantiene la esquina redondeada superior izquierda */
+  border-top-right-radius: 8px;/* Mantiene la esquina redondeada superior derecha */
+}
+
+/* 🟢 2. Posicionamiento absoluto para fijar el corazón abajo a la izquierda de la foto */
+.wishlistWrapper {
+  position: absolute;
+  bottom: 10px; /* Distancia de 10px respecto al borde inferior de la foto */
+  left: 10px;  /* Distancia de 10px respecto al borde izquierdo de la foto */
+  z-index: 5;  /* Asegura que el botón se muestre por encima de la imagen */
 }
 
 .content {
@@ -50,6 +67,7 @@
   transition: background-color 0.2s;
   text-align: center;
   margin-top: auto;
+  text-decoration: none; /* Asegura que los Link de React Router no tengan subrayado */
 }
 
 .button:hover {
@@ -60,8 +78,8 @@
 
 .badge {
   position: absolute;
-  top: -10px;     /* <-- CAMBIADO: la empuja hacia arriba fuera de la card */
-  right: -10px;    /* <-- CAMBIADO: la empuja hacia la derecha fuera de la card */
+  top: -10px;    /* La empuja hacia arriba fuera de la card */
+  right: -10px;    /* La empuja hacia la derecha fuera de la card */
   background-color: #e53935;
   color: white;
   font-weight: bold;
@@ -107,7 +125,7 @@
   opacity: 0.7;
 }
 
-/* Estilo para botón en estado agotado (opcional, si quieres cambiar su color) */
+/* Estilo para botón en estado agotado */
 .disabledButton {
   background-color: #94a3b8;
 }

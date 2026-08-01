@@ -11,6 +11,7 @@ import HomePage from './pages/HomePage/HomePage';
 import ProductsPage from './pages/ProductsPage/ProductsPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
+import WishlistPage from './pages/WishlistPage/WishlistPage';
 import ProductDetailPage from './pages/ProductDetailPage/ProductDetailPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import CartPage from "./pages/CartPage/CartPage";
@@ -55,6 +56,7 @@ export default function App() {
           <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

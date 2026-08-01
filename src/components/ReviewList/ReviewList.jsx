@@ -3,7 +3,6 @@ import styles from './ReviewList.module.css';
 
 export default function ReviewList({ reviews, loading, error }) {
     if (loading) return <p className={styles.message}>Cargando comentarios...</p>;
-
     if (error) return <p className={styles.error}>No se pudieron cargar las valoraciones.</p>;
 
     if (!reviews || reviews.length === 0) {
@@ -18,14 +17,18 @@ export default function ReviewList({ reviews, loading, error }) {
         <ul className={styles.list}>
             {reviews.map((review) => {
                 const reviewId = review.id || review._id;
-                console.log("Objeto review recibido:", review);
-                // 🔴 Añadimos review.userName aquí para que lo lea correctamente
                 const reviewerName =
                     review.userName || review.user?.name || review.username || review.user || 'Usuario Anónimo';
 
                 return (
                     <li key={reviewId} className={styles.reviewCard}>
-                        <p className={styles.author}>{reviewerName}</p>
+                        <div className={styles.headerCard}>
+                            <p className={styles.author}>{reviewerName}</p>
+                            {/* 🟢 Mostramos la fecha si viene registrada */}
+                            {review.fechaDeVisualizacion && (
+                                <span className={styles.date}>Vista el: {review.fechaDeVisualizacion}</span>
+                            )}
+                        </div>
                         <StarRating rating={review.rating} maxRating={10} />
                         <p className={styles.comment}>{review.comment}</p>
                     </li>
