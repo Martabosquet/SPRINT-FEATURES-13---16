@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux'; // 1. Importamos useDispatch
+import { useNavigate, Link, useSearchParams } from 'react-router-dom'; // 1. Importamos useSearchParams
+import { useDispatch } from 'react-redux'; 
 import api from '../../api/axios';
-import { getCart } from '../../api/cart'; // 2. Importamos la función para obtener el carrito del backend
-import { setLocalCart } from '../../store/cartSlice'; // 3. Importamos la acción de Redux
+import { getCart } from '../../api/cart'; 
+import { setLocalCart } from '../../store/cartSlice'; 
 import FormInput from '../../components/FormInput/FormInput';
 import Button from '../../components/Button/Button';
 import styles from './LoginPage.module.css';
@@ -25,7 +25,11 @@ export default function LoginPage() {
     const [submitError, setSubmitError] = useState('');
 
     const navigate = useNavigate();
-    const dispatch = useDispatch(); // 4. Inicializamos dispatch
+    const dispatch = useDispatch();
+    
+    // 2. Leemos los parámetros de la URL para saber si la sesión ha expirado
+    const [searchParams] = useSearchParams();
+    const isSessionExpired = searchParams.get('expired') === 'true';
 
     // Validación previa al envío del formulario
     const validate = () => {
@@ -60,7 +64,7 @@ export default function LoginPage() {
                 // El token ya está en la cookie httpOnly
                 localStorage.setItem('userName', response.data.user?.name || 'Usuario');
 
-                // 🔴 5. RECUPERAMOS EL CARRITO DEL USUARIO DESDE EL BACKEND
+                // Recuperamos el carrito del usuario desde el backend
                 try {
                     const userCart = await getCart();
                     if (Array.isArray(userCart)) {
@@ -84,6 +88,14 @@ export default function LoginPage() {
     return (
         <div className={styles.container}>
             <h2 className={styles.title}>Iniciar Sesión</h2>
+
+            {/* 3. Aviso visual si el usuario llegó aquí por expiración del token */}
+            {isSessionExpired && (
+                <div className={styles.expiredAlert}>
+                    Tu sesión ha caducado por inactividad. Por favor, vuelve a iniciar sesión.
+                </div>
+            )}
+
             <form onSubmit={handleSubmit} className={styles.form} noValidate>
                 {/* autoFocus en el primer campo gracias al componente FormInput */}
                 <FormInput

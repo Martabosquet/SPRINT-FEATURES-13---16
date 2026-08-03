@@ -2,11 +2,15 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: #f8fafc; /* Fondo general gris muy suave y moderno */
+  color: #0f172a;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
+
 .main-content {
   flex: 1;
-  max-width: 1200px;
   width: 100%;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 2rem 1.5rem;
 }

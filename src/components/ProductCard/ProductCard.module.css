@@ -1,134 +1,129 @@
 .card {
   position: relative;
-  background-color: var(--card-bg);
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  overflow: visible; /* Permite que elementos flotantes (como la burbuja del carrito) sobresalgan si es necesario */
+  background: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #f1f5f9;
 }
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
 }
 
-/* 🟢 1. Contenedor de la imagen con position: relative para servir de referencia al corazón */
 .imageContainer {
-  position: relative; 
+  position: relative;
   width: 100%;
-  height: 200px;
+  height: 280px; /* Altura fija uniforme para todos los pósters/imágenes */
+  overflow: hidden;
+  background-color: #e2e8f0;
 }
 
 .image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-top-left-radius: 8px; /* Mantiene la esquina redondeada superior izquierda */
-  border-top-right-radius: 8px;/* Mantiene la esquina redondeada superior derecha */
+  transition: transform 0.5s ease;
 }
 
-/* 🟢 2. Posicionamiento absoluto para fijar el corazón abajo a la izquierda de la foto */
+.card:hover .image {
+  transform: scale(1.05);
+}
+
+.grayscale {
+  filter: grayscale(100%);
+  opacity: 0.7;
+}
+
+/* Posicionamiento del botón de wishlist flotando en la esquina superior o inferior de la foto */
 .wishlistWrapper {
   position: absolute;
-  bottom: 10px; /* Distancia de 10px respecto al borde inferior de la foto */
-  left: 10px;  /* Distancia de 10px respecto al borde izquierdo de la foto */
-  z-index: 5;  /* Asegura que el botón se muestre por encima de la imagen */
-}
-
-.content {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  gap: 0.5rem;
-}
-
-.title {
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.price {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--primary-color);
-}
-
-.button {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  text-align: center;
-  margin-top: auto;
-  text-decoration: none; /* Asegura que los Link de React Router no tengan subrayado */
-}
-
-.button:hover {
-  background-color: var(--primary-hover);
-}
-
-/* Burbuja items en el carrito -----------------------------------------------------------------------------*/
-
-.badge {
-  position: absolute;
-  top: -10px;    /* La empuja hacia arriba fuera de la card */
-  right: -10px;    /* La empuja hacia la derecha fuera de la card */
-  background-color: #e53935;
-  color: white;
-  font-weight: bold;
-  font-size: 0.85rem;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  bottom: 12px;
+  right: 12px;
   z-index: 10;
 }
 
-.stock {
-  font-size: 0.85rem;
-  color: #666;
-  margin: 0 0 0.5rem 0;
-}
-
-.stock strong {
-  color: #2e7d32; /* Verde sutil para denotar disponibilidad */
-}
-
-/* Etiqueta de agotado flotante en la esquina superior izquierda -------------------------------------*/
-.outOfStockBadge {
+.badge {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: #64748b;
-  color: #fff;
+  top: 12px;
+  left: 12px;
+  background-color: #e11d48;
+  color: white;
   font-size: 0.75rem;
   font-weight: 700;
   padding: 0.25rem 0.6rem;
   border-radius: 9999px;
   z-index: 10;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* Efecto opcional para apagar un poco la imagen si está agotado */
-.grayscale {
-  filter: grayscale(80%);
-  opacity: 0.7;
-}
-
-/* Estilo para botón en estado agotado */
-.disabledButton {
-  background-color: #94a3b8;
-}
-.disabledButton:hover {
+.outOfStockBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
   background-color: #64748b;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  z-index: 10;
+}
+
+.content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.5rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.price {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #e11d48;
+  margin: 0 0 0.5rem 0;
+}
+
+.stock {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.button {
+  margin-top: auto;
+  text-align: center;
+  background-color: #0f172a;
+  color: white;
+  text-decoration: none;
+  padding: 0.65rem 1rem;
+  border-radius: 0.50rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: #334155;
+}
+
+.disabledButton {
+  background-color: #cbd5e1;
+  pointer-events: none;
 }

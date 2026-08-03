@@ -15,6 +15,8 @@ import WishlistPage from './pages/WishlistPage/WishlistPage';
 import ProductDetailPage from './pages/ProductDetailPage/ProductDetailPage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import CartPage from "./pages/CartPage/CartPage";
+import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
+import CheckoutSuccessPage from './pages/CheckoutSuccessPage/CheckoutSuccessPage';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -58,6 +60,8 @@ export default function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/checkout-success" element={<CheckoutSuccessPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>

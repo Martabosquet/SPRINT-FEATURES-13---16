@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom'; // 1. Importamos useNavigate
 import CartSummary from '../../components/CartSummary/CartSummary';
 import StatusMessage from '../../components/StatusMessage/StatusMessage';
 import { removeItem, addCartItem, decreaseItemQuantity } from '../../api/cart';
@@ -7,6 +8,7 @@ import styles from './CartPage.module.css';
 
 function CartPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // 2. Inicializamos navigate
   const items = useSelector((state) => state.cart.items);
 
   const handleIncrease = async (item) => {
@@ -36,7 +38,6 @@ function CartPage() {
     }
 
     try {
-      // Usamos exactamente la misma llamada que tenías antes de tocar el stock
       await decreaseItemQuantity(cartItemId, 1);
       
       dispatch(addLocalCartItem({
@@ -50,12 +51,16 @@ function CartPage() {
 
   const handleRemove = async (cartItemId) => {
     try {
-      // Usamos el ID del registro del carrito que el backend espera
       await removeItem(cartItemId);
       dispatch(removeLocalCartItem(cartItemId));
     } catch (error) {
       console.error('Error al eliminar el producto del carrito', error);
     }
+  };
+
+  // 3. Función para redirigir al checkout
+  const handleProceedToCheckout = () => {
+    navigate('/checkout');
   };
 
   return (
@@ -127,7 +132,9 @@ function CartPage() {
               );
             })}
           </div>
-          <CartSummary items={items} />
+          
+          {/* 4. Le pasamos la función de checkout al resumen de compra para que active el botón */}
+          <CartSummary items={items} onCheckout={handleProceedToCheckout} />
         </section>
       )}
     </main>
