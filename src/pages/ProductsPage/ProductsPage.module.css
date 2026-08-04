@@ -1,6 +1,6 @@
 .container {
-    padding: 1rem 0;
-    max-width: 1200px;
+    padding: 1.5rem 2rem;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -26,7 +26,6 @@
     margin-top: 2rem;
 }
 
-/* --- NUEVO: Grid de productos integrado con tu base --- */
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -111,4 +110,33 @@
 
 .stock strong {
   color: #2e7d32; /* Un verde sutil para indicar disponibilidad, o puedes usar #111 */
+}
+
+/* Contenedor flexible para poner la barra de búsqueda y el select alineados */
+.filtersBar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Estilo para el desplegable de ordenación, heredando la elegancia de .search */
+.select {
+    width: 100%;
+    max-width: 260px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #fff;
+    color: #111;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.select:focus {
+    border-color: var(--primary-color, #dc2626);
+    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.2);
 }

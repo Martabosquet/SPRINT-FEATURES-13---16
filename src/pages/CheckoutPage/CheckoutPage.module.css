@@ -86,6 +86,31 @@
   font-weight: 500;
 }
 
+.stockErrorBox {
+  border: 1px solid #fecaca;
+  background: #fff5f5;
+  border-radius: 0.5rem;
+  padding: 0.85rem 1rem;
+}
+
+.stockError {
+  color: #dc2626;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+.stockIssueList {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: #991b1b;
+  font-size: 0.875rem;
+}
+
+.stockIssueList li + li {
+  margin-top: 0.35rem;
+}
+
 .submitButton {
   background-color: #f97316;
   color: white;

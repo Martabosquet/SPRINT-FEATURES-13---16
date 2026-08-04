@@ -10,6 +10,10 @@ export default function CheckoutPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
+  const stockIssues = cartItems.filter(
+    (item) => Number(item.quantity ?? 0) > Number(item.stock ?? 0)
+  );
+  const hasStockIssue = stockIssues.length > 0;
 
   // Estados para la dirección de envío
   const [formData, setFormData] = useState({
@@ -148,9 +152,24 @@ export default function CheckoutPage() {
               <p>💳 El pago con tarjeta (Stripe) se integrará aquí próximamente.</p>
             </div>
 
+            {hasStockIssue && (
+              <div className={styles.stockErrorBox}>
+                <p className={styles.stockError}>
+                  No puedes continuar con el pedido porque estos productos superan el stock disponible:
+                </p>
+                <ul className={styles.stockIssueList}>
+                  {stockIssues.map((item) => (
+                    <li key={item.id || item.productId}>
+                      <strong>{item.name || 'Producto'}</strong>: tienes {item.quantity} unidades, pero solo quedan {item.stock} disponibles.
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {error && <p className={styles.error}>{error}</p>}
 
-            <button type="submit" className={styles.submitButton} disabled={loading}>
+            <button type="submit" className={styles.submitButton} disabled={loading || hasStockIssue}>
               {loading ? 'Procesando...' : `Pagar ${totalPrice.toFixed(2)} €`}
             </button>
           </form>

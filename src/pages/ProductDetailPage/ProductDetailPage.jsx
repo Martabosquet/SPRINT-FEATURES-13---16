@@ -5,8 +5,8 @@ import { useProduct } from '../../hooks/useProduct';
 import { useReviews } from '../../hooks/useReviews';
 import ReviewList from '../../components/ReviewList/ReviewList';
 import ReviewForm from '../../components/ReviewForm/ReviewForm';
-import { addCartItem } from '../../api/cart';
-import { addLocalCartItem } from '../../store/cartSlice';
+import { addCartItem, getCart } from '../../api/cart';
+import { setLocalCart } from '../../store/cartSlice';
 import styles from './ProductDetailPage.module.css';
 
 export default function ProductDetailPage() {
@@ -42,16 +42,23 @@ export default function ProductDetailPage() {
     try {
       await addCartItem(product.id, quantity);
 
+      const cartData = await getCart();
+      const items = Array.isArray(cartData) ? cartData : cartData?.items || [];
+
       dispatch(
-        addLocalCartItem({
-          id: product.id,
-          name: product.name,
-          price: Number(product.price ?? 0),
-          quantity,
-          imageUrl: product.imageUrl,
-          stock: maxStock,
-        })
+        setLocalCart(
+          items.map((item) => ({
+            id: item.id ?? item.cartItemId ?? item.productId,
+            productId: item.productId ?? item.product?.id ?? item.id,
+            name: item.product?.name || item.name || 'Producto',
+            price: Number(item.product?.price ?? item.price ?? 0),
+            imageUrl: item.product?.imageUrl ?? item.imageUrl,
+            quantity: item.quantity ?? 1,
+            stock: item.product?.stock ?? item.stock ?? 0,
+          }))
+        )
       );
+
       navigate('/cart');
     } catch (err) {
       console.error(err);
