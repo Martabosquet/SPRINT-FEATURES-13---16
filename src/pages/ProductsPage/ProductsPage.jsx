@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { Link } from "react-router-dom"
 import { getProducts } from "../../api/products"
 import ProductCard from "../../components/ProductCard/ProductCard"
 import StatusMessage from "../../components/StatusMessage/StatusMessage"
@@ -10,6 +11,7 @@ function ProductsPage() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const isAdmin = localStorage.getItem('admin') === 'true'; 
 
   // Estados para los filtros
   const [searchTerm, setSearchTerm] = useState("")
@@ -101,6 +103,26 @@ function ProductsPage() {
           <option value="name-desc">Alfabético: Z - A</option>
         </select>
       </div>
+
+      {/* Si es admin, mostramos el botón para añadir producto */}
+      {isAdmin && (
+        <div style={{ marginBottom: "1.5rem" }}>
+          <Link 
+            to="/admin/products/new" 
+            style={{
+              backgroundColor: "#2e7d32",
+              color: "#fff",
+              padding: "0.75rem 1.25rem",
+              borderRadius: "6px",
+              textDecoration: "none",
+              fontWeight: "600",
+              display: "inline-block"
+            }}
+          >
+            + Añadir Nuevo Producto
+          </Link>
+        </div>
+      )}
 
       {/* Listado de productos */}
       {sortedProducts.length === 0 ? (

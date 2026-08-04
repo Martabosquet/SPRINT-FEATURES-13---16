@@ -64,6 +64,9 @@ export default function LoginPage() {
                 // El token ya está en la cookie httpOnly
                 localStorage.setItem('userName', response.data.user?.name || 'Usuario');
 
+                // Guardamos si el usuario es administrador
+                localStorage.setItem('admin', response.data.user?.role === 'admin' ? 'true' : 'false');
+
                 // Recuperamos el carrito del usuario desde el backend
                 try {
                     const userCart = await getCart();

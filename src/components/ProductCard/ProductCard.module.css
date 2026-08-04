@@ -127,3 +127,23 @@
   background-color: #cbd5e1;
   pointer-events: none;
 }
+
+/* Botón de eliminar exclusivo para administradores */
+.deleteButton {
+  margin-top: 0.5rem;
+  width: 100%;
+  text-align: center;
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  padding: 0.65rem 1rem;
+  border-radius: 0.50rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.deleteButton:hover {
+  background-color: #b91c1c;
+}
