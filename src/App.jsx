@@ -3,7 +3,7 @@ import { RouterProvider } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { getCart } from './api/cart';
 import { setLocalCart } from './store/cartSlice';
-import { router } from './router/Index'; // Ajusta la ruta de importación según dónde tengas tu archivo del router
+import { router } from './router/Index';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -32,6 +32,5 @@ export default function App() {
     fetchInitialCart();
   }, [dispatch]);
 
-  // Renderiza el router moderno mediante el RouterProvider
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router} />;   // Renderiza el router moderno mediante el RouterProvider
 }

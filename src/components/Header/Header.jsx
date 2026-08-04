@@ -7,6 +7,7 @@ import styles from './Header.module.css';
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [userName, setUserName] = useState(localStorage.getItem('userName'));
+  const [userProfileImage, setUserProfileImage] = useState(localStorage.getItem('userProfileImage'));
   const navigate = useNavigate();
   const dispatch = useDispatch(); 
   
@@ -16,10 +17,11 @@ export default function Header() {
     0,
   );
 
-  // Efecto para sincronizar el estado de autenticación (nombre de usuario) ante cambios en storage o eventos personalizados
+  // Efecto para sincronizar el estado de autenticación y datos de usuario
   useEffect(() => {
       const syncAuth = () => {
         setUserName(localStorage.getItem('userName'));
+        setUserProfileImage(localStorage.getItem('userProfileImage'));
       };
 
       window.addEventListener('authChange', syncAuth);
@@ -36,6 +38,7 @@ export default function Header() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userName');
+    localStorage.removeItem('userProfileImage');
     
     window.dispatchEvent(new Event('authChange'));
     setIsOpen(false);
@@ -82,7 +85,7 @@ export default function Header() {
             Catálogo
           </NavLink>
 
-          {/* 🟢 NUEVO: Enlace a la Wishlist (visible solo si el usuario ha iniciado sesión) */}
+          {/* Enlace a la Wishlist (visible solo si el usuario ha iniciado sesión) */}
           {userName && (
             <NavLink
               to="/wishlist"
@@ -91,14 +94,65 @@ export default function Header() {
               }
               onClick={() => setIsOpen(false)}
             >
-            ❤️
+              ❤️
             </NavLink>
+          )}
+
+          {/* 🛒 Carrito reubicado justo a la derecha del corazón (visible si hay sesión) */}
+          {userName && (
+            <div className={styles['cart-area']}>
+              <Link className={styles.link} to="/cart" onClick={() => setIsOpen(false)}>
+                🛒
+              </Link>
+              
+              {totalItems > 0 && (
+                <div className={styles.status}>
+                  <span className={styles.badge}>{totalItems}</span>
+                </div>
+              )}
+            </div>
           )}
 
           {/* Área de control de sesión (Usuario / Iniciar sesión) */}
           {userName ? (
             <div className={styles['user-area']}>
-              <span className={styles.greeting}>Hola, {userName}</span>
+              {/* 🟢 Círculo con la foto de perfil (o inicial por defecto) a la izquierda del saludo */}
+              <Link 
+                to="/profile" 
+                onClick={() => setIsOpen(false)}
+                style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
+              >
+                <div style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  backgroundColor: '#ccc',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: '0.5rem',
+                  border: '1px solid #ddd'
+                }}>
+                  {userProfileImage ? (
+                    <img src={userProfileImage} alt="Perfil" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <span style={{ fontSize: '14px', color: '#fff', fontWeight: 'bold' }}>
+                      {userName.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                </div>
+              </Link>
+
+              {/* Saludo navegable hacia /profile */}
+              <Link 
+                to="/profile" 
+                className={styles.greeting} 
+                onClick={() => setIsOpen(false)}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                Hola, {userName}
+              </Link>
               <button onClick={handleLogout} className={styles['logout-btn']}>
                 Cerrar sesión
               </button>
@@ -114,21 +168,6 @@ export default function Header() {
             >
               Iniciar sesión
             </NavLink>
-          )}
-
-          {/* Sección del carrito de compras y su indicador numérico */}
-          {userName && (
-            <div className={styles['cart-area']}>
-              <Link className={styles.link} to="/cart" onClick={() => setIsOpen(false)}>
-                Carrito
-              </Link>
-              
-              {totalItems > 0 && (
-                <div className={styles.status}>
-                  <span className={styles.badge}>{totalItems}</span>
-                </div>
-              )}
-            </div>
           )}
         </nav>
       </div>

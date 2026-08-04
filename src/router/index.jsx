@@ -4,14 +4,18 @@ import HomePage from '../pages/HomePage/HomePage';
 import ProductsPage from '../pages/ProductsPage/ProductsPage';
 import ProductDetailPage from '../pages/ProductDetailPage/ProductDetailPage';
 import CreateProductPage from '../pages/CreateProductPage/CreateProductPage';
+import LoginPage from '../pages/LoginPage/LoginPage';
+import RegisterPage from '../pages/RegisterPage/RegisterPage';
+import ProfilePage from '../pages/ProfilePage/ProfilePage';
+import CartPage from '../pages/CartPage/CartPage';
+import CheckoutPage from '../pages/CheckoutPage/CheckoutPage';
+import CheckoutSuccessPage from '../pages/CheckoutSuccessPage/CheckoutSuccessPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 
-// Función auxiliar para comprobar si el usuario es administrador
 const isAdminUser = () => {
   return localStorage.getItem('admin') === 'true';
 };
 
-// Componente protector de rutas para administradores
 const AdminRoute = ({ children }) => {
   return isAdminUser() ? children : <Navigate to="/products" replace />;
 };
@@ -34,13 +38,36 @@ export const router = createBrowserRouter([
         element: <ProductDetailPage />
       },
       {
-        // Nueva ruta protegida para crear productos
         path: 'admin/products/new',
         element: (
           <AdminRoute>
             <CreateProductPage />
           </AdminRoute>
         )
+      },
+      {
+        path: 'login',
+        element: <LoginPage />
+      },
+      {
+        path: 'register',
+        element: <RegisterPage />
+      },
+      {
+        path: 'profile',
+        element: <ProfilePage />
+      },
+      {
+        path: 'cart',
+        element: <CartPage />
+      },
+      {
+        path: 'checkout',
+        element: <CheckoutPage />
+      },
+      {
+        path: 'checkout-success',
+        element: <CheckoutSuccessPage />
       },
       {
         path: '*',

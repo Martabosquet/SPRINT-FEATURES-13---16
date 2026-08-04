@@ -63,6 +63,9 @@ export default function LoginPage() {
             if (response.data.ok) {
                 // El token ya está en la cookie httpOnly
                 localStorage.setItem('userName', response.data.user?.name || 'Usuario');
+                
+                // 🟢 Guardamos la foto de perfil en localStorage para que el Header la lea al instante
+                localStorage.setItem('userProfileImage', response.data.user?.profileImage || '');
 
                 // Guardamos si el usuario es administrador
                 localStorage.setItem('admin', response.data.user?.role === 'admin' ? 'true' : 'false');

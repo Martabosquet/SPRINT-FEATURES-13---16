@@ -16,6 +16,7 @@ export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [imageFile, setImageFile] = useState(null); // 🟢 Estado para almacenar el archivo de la foto
 
     // Estado para los errores de validación de cada campo
     const [errors, setErrors] = useState({});
@@ -62,10 +63,19 @@ export default function RegisterPage() {
             return;
         }
 
-        // Si no hay errores, limpiamos y enviamos (solo enviamos name, email y password al backend)
+        // Si no hay errores, montamos el FormData para enviar archivos y texto al backend
         setErrors({});
         try {
-            const response = await api.post('/api/auth/register', { name, email, password });
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('password', password);
+            if (imageFile) {
+                formData.append('profileImage', imageFile); // 🟢 Añadimos la foto si el usuario la seleccionó
+            }
+
+            const response = await api.post('/api/auth/register', formData);
+            
             if (response.data.ok) {
                 navigate('/login');
             }
@@ -113,6 +123,17 @@ export default function RegisterPage() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     error={errors.confirmPassword}
                 />
+
+                {/* 🟢 Campo para adjuntar la foto de perfil en el registro */}
+                <div className={styles.field} style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <label htmlFor="profileImage" style={{ fontSize: '14px', fontWeight: '500' }}>Foto de perfil (opcional):</label>
+                    <input 
+                        id="profileImage"
+                        type="file" 
+                        accept="image/*" 
+                        onChange={(e) => setImageFile(e.target.files[0])} 
+                    />
+                </div>
 
                 {/* Error general de la petición (respuesta del servidor) */}
                 {submitError && <p className={styles.submitError}>{submitError}</p>}
