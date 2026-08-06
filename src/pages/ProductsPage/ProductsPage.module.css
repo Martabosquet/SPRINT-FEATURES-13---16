@@ -1,23 +1,49 @@
 .container {
-    padding: 1.5rem 2rem;
-    width: 100%;
+    max-width: 1400px;
     margin: 0 auto;
+    padding: 3rem 2rem;
 }
 
-.search {
-    width: 100%;
-    max-width: 400px;
-    padding: 0.75rem 1rem;
-    border: 1px solid #cbd5e0;
-    border-radius: 6px;
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
-    outline: none;
+.hero {
+    text-align: center;
+    margin-bottom: 3rem;
 }
 
-.search:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.2);
+.eyebrow {
+    text-transform: uppercase;
+    letter-spacing: .18rem;
+    font-size: .8rem;
+    color: #b08968;
+    font-weight: 700;
+    margin-bottom: .8rem;
+}
+
+.title {
+    font-size: clamp(2rem,4vw,3rem);
+    color: #2d2d2d;
+    margin-bottom: 1rem;
+}
+
+.description {
+    max-width: 700px;
+    margin: auto;
+    color: #666;
+    line-height: 1.7;
+}
+
+.filtersBar {  /* Contenedor flexible para poner la barra de búsqueda y el select alineados */
+    display:flex;
+    gap:1rem;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-bottom:1rem;
+}
+
+.results{
+    text-align:center;
+    color:#777;
+    margin-bottom:2rem;
+    font-weight:500;
 }
 
 .no-results {
@@ -26,10 +52,51 @@
     margin-top: 2rem;
 }
 
+.search{
+    flex:1;
+    min-width:280px;
+    max-width:500px;
+
+    padding:.9rem 1rem;
+
+    border-radius:12px;
+
+    border:1px solid #ddd;
+
+    background:white;
+
+    transition:.25s;
+}
+
+.search:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.2);
+}
+
+.adminActions{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:2rem;
+}
+
+.addButton{
+    background:#6f4e37;
+    color:white;
+    text-decoration:none;
+    padding:.9rem 1.3rem;
+    border-radius:12px;
+    transition:.25s;
+}
+
+.addButton:hover{
+    background:#5a3d2b;
+    transform:translateY(-2px);
+}
+
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 1.75rem;
 }
 
 .card {
@@ -112,28 +179,17 @@
   color: #2e7d32; /* Un verde sutil para indicar disponibilidad, o puedes usar #111 */
 }
 
-/* Contenedor flexible para poner la barra de búsqueda y el select alineados */
-.filtersBar {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
 /* Estilo para el desplegable de ordenación, heredando la elegancia de .search */
-.select {
-    width: 100%;
-    max-width: 260px;
-    padding: 0.75rem 1rem;
-    border: 1px solid #cbd5e0;
-    border-radius: 6px;
-    font-size: 1rem;
-    background-color: #fff;
-    color: #111;
-    outline: none;
-    cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+.select{
+    width:260px;
+
+    border-radius:12px;
+
+    border:1px solid #ddd;
+
+    background:white;
+
+    padding:.9rem 1rem;
 }
 
 .select:focus {

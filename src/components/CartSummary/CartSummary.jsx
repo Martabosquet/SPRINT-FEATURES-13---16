@@ -3,10 +3,12 @@ import styles from "./CartSummary.module.css"
 
 function CartSummary({ items, onCheckout, loading }) {
   const totalItems = useMemo(
-    () => items.reduce((sum, item) => sum + Number(item.quantity ?? 0), 0),
+    () =>
+      items.reduce((sum, item) => sum + Number(item.quantity ?? 0), 0),
     [items],
   )
-  const totalPrice = useMemo(
+
+  const subtotal = useMemo(
     () =>
       items.reduce(
         (sum, item) =>
@@ -16,19 +18,48 @@ function CartSummary({ items, onCheckout, loading }) {
     [items],
   )
 
+  const shipping = subtotal >= 50 || subtotal === 0 ? 0 : 4.95
+  const total = subtotal + shipping
+
+  const formatPrice = (value) =>
+    new Intl.NumberFormat("es-ES", {
+      style: "currency",
+      currency: "EUR",
+    }).format(value)
+
   return (
     <aside className={styles.box}>
-      <p className={styles.label}>Resumen</p>
-      <p className={styles.line}>Items: {totalItems}</p>
-      <p className={styles.line}>Total: {totalPrice.toFixed(2)} EUR</p>
-      <button
-        className={styles.button}
-        type="button"
-        onClick={onCheckout}
-        disabled={loading}
-      >
-        {loading ? "Procesando..." : "Checkout"}
-      </button>
+      <h2 className={styles.title}>Resumen del pedido</h2>
+
+      <div className={styles.row}>
+  <span>Productos</span>
+  <span>{totalItems}</span>
+</div>
+
+<div className={styles.row}>
+  <span>Entrega</span>
+  <span className={styles.free}>Gratis</span>
+</div>
+
+<hr className={styles.separator} />
+
+<div className={styles.totalRow}>
+  <span>Total</span>
+  <span>{formatPrice(subtotal)}</span>
+</div>
+
+<p className={styles.note}>
+  🚚 Entrega gratuita en Bakio. Te lo llevamos personalmente.
+</p>
+
+<button
+  className={styles.button}
+  type="button"
+  onClick={onCheckout}
+  disabled={loading || totalItems === 0}
+>
+  {loading ? "Procesando..." : "Finalizar compra"}
+</button>
     </aside>
   )
 }

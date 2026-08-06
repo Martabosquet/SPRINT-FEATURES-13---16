@@ -1,0 +1,179 @@
+.card {
+
+  background:white;
+
+  border-radius:1.25rem;
+
+  padding:2rem;
+
+  border:1px solid #e7dfd5;
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:1.5rem;
+
+}
+
+
+
+.card h3 {
+
+  margin:0;
+
+  font-size:1.3rem;
+
+  color:#1f2933;
+
+  font-family:Georgia,serif;
+
+}
+
+
+
+.avatarContainer {
+
+  display:flex;
+
+  justify-content:center;
+
+}
+
+
+
+.avatar {
+
+  width:110px;
+
+  height:110px;
+
+  border-radius:50%;
+
+  object-fit:cover;
+
+  border:3px solid #e7dfd5;
+
+}
+
+
+
+.form {
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:1.2rem;
+
+}
+
+
+
+.field {
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:.4rem;
+
+}
+
+
+
+.field label {
+
+  font-size:.85rem;
+
+  font-weight:700;
+
+  color:#475569;
+
+}
+
+
+
+.input {
+
+  padding:.75rem 1rem;
+
+  border-radius:.6rem;
+
+  border:1px solid #cbd5e1;
+
+  background:#fafafa;
+
+  font-size:.95rem;
+
+}
+
+
+
+.input:focus {
+
+  outline:none;
+
+  border-color:#8b5e3c;
+
+}
+
+
+
+.button {
+
+  background:#1f2933;
+
+  color:white;
+
+  border:none;
+
+  padding:.9rem;
+
+  border-radius:.7rem;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:.25s;
+
+}
+
+
+
+.button:hover {
+
+  background:#8b5e3c;
+
+}
+
+
+
+.button:disabled {
+
+  opacity:.6;
+
+  cursor:not-allowed;
+
+}
+
+
+
+.error {
+
+  color:#b91c1c;
+
+  font-size:.9rem;
+
+}
+
+
+
+.success {
+
+  color:#4f7c59;
+
+  font-size:.9rem;
+
+}

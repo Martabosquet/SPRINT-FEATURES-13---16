@@ -1,12 +1,14 @@
+import { authStorage } from '../utils/authStorage';
+
 const initialState = {
   user: {
-    id: localStorage.getItem("userId") || null,
-    name: localStorage.getItem("userName") || null,
-    email: localStorage.getItem("userEmail") || null,
-    role: localStorage.getItem("userRole") || null,
-    profileImage: localStorage.getItem("userProfileImage") || null,
+    id: authStorage.userId || null,
+    name: authStorage.userName || null,
+    email: authStorage.userEmail || null,
+    role: authStorage.userRole || null,
+    profileImage: authStorage.userProfileImage || null,
   },
-  token: localStorage.getItem("token") || null,
+  token: authStorage.token || null,
 };
 
 export default function authReducer(state = initialState, action) {

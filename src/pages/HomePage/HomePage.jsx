@@ -1,44 +1,134 @@
-import { useProducts } from '../../hooks/useProducts';
-import ProductGrid from '../../components/ProductGrid/ProductGrid';
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { useProducts } from "../../hooks/useProducts";
+import ProductGrid from "../../components/ProductGrid/ProductGrid";
+import styles from "./HomePage.module.css";
 
 export default function HomePage() {
-  // Consumimos el hook que creamos en el paso anterior
-  const { data: products, loading, error } = useProducts();
-
-  // Si la petición a la API sigue en curso, mostramos mensaje de carga
-  if (loading) return <p style={{ textAlign: 'center', padding: '2rem' }}>Cargando productos destacados...</p>;
-
-  // Si la API falla o el servidor está apagado, mostramos el error
-  if (error) return <p style={{ textAlign: 'center', color: 'red', padding: '2rem' }}>{error}</p>;
-
-  // Si todo está correcto, tomamos los 3 primeros productos de la base de datos real
-  const featuredProducts = products.slice(0, 3);
-
+  const {
+    data: products,
+    loading,
+    error
+  } = useProducts();
+  if (loading) {
+    return (
+      <p className={styles.message}>
+        Cargando catálogo...
+      </p>
+    );
+  }
+  if (error) {
+    return (
+      <p className={styles.error}>
+        {error}
+      </p>
+    );
+  }
+  /*
+    Mostramos una selección inicial.
+    Más adelante podemos sustituir esto por:
+    - más valoradas
+    - novedades
+    - recomendadas
+  */
+  const featuredProducts =
+    products.slice(0, 6);
   return (
-    <div>
-      <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
-        <h1>Bienvenido a MiTienda Real</h1>
-        <p style={{ color: 'var(--text-light)', margin: '0.5rem 0 1.5rem' }}>
-          Descubre nuestra selección conectada a base de datos.
+    <main className={styles.home}>
+      {/* HERO PRINCIPAL */}
+      <section className={styles.hero}>
+        <span className={styles.eyebrow}>
+          🎬 ATXURRE CINECLUB
+        </span>
+        <h1>
+          El cine que merece
+          quedarse contigo
+        </h1>
+        <p>
+          Descubre películas seleccionadas,
+          comparte tus opiniones y crea tu
+          propia colección cinematográfica.
         </p>
         <Link
           to="/products"
-          style={{
-            backgroundColor: 'var(--primary-color)',
-            color: 'white',
-            padding: '0.75rem 1.5rem',
-            borderRadius: '6px',
-            fontWeight: 'bold'
-          }}
+          className={styles.button}
         >
-          Ver todo el catálogo
+          Explorar películas
         </Link>
-      </div>
-
-      <h2>Productos Destacados</h2>
-      {/* Pasamos los productos reales al grid mediante props */}
-      <ProductGrid products={featuredProducts} />
-    </div>
+      </section>
+      {/* DESTACADOS */}
+      <section className={styles.featured}>
+        <div className={styles.sectionHeader}>
+          <h2>
+            Películas destacadas
+          </h2>
+          <Link
+            to="/products"
+            className={styles.moreLink}
+          >
+            Ver todas →
+          </Link>
+        </div>
+        <ProductGrid
+          products={featuredProducts}
+        />
+      </section>
+      {/* FILOSOFÍA DEL CLUB */}
+      <section className={styles.features}>
+        <article>
+          <span>
+            🎞️
+          </span>
+          <h3>
+            Cine seleccionado
+          </h3>
+          <p>
+            Una colección cuidada para
+            quienes disfrutan descubriendo
+            grandes historias.
+          </p>
+        </article>
+        <article>
+          <span>
+            ⭐
+          </span>
+          <h3>
+            Opiniones reales
+          </h3>
+          <p>
+            Valora películas, comparte
+            experiencias y descubre nuevas
+            recomendaciones.
+          </p>
+        </article>
+        <article>
+          <span>
+            🤝
+          </span>
+          <h3>
+            Comunidad cinéfila
+          </h3>
+          <p>
+            Un espacio para amantes del cine
+            y coleccionistas.
+          </p>
+        </article>
+      </section>
+      {/* CTA FINAL */}
+      <section className={styles.cta}>
+        <h2>
+          ¿Preparado para tu próxima película?
+        </h2>
+        <p>
+          Explora nuestro catálogo y encuentra
+          tu próxima historia favorita.
+        </p>
+        <Link
+          to="/products"
+          className={styles.button}
+        >
+          Ver películas
+        </Link>
+      </section>
+    </main>
   );
 }

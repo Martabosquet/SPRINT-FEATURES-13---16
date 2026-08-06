@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import { getProducts } from "../../api/products"
 import ProductCard from "../../components/ProductCard/ProductCard"
 import StatusMessage from "../../components/StatusMessage/StatusMessage"
+import { authStorage } from "../../utils/authStorage"
 import styles from "./ProductsPage.module.css"
 
 function ProductsPage() {
-  const dispatch = useDispatch()
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
-  const isAdmin = localStorage.getItem('admin') === 'true'; 
+  const isAdmin = authStorage.admin === 'true'; 
 
   // Estados para los filtros
   const [searchTerm, setSearchTerm] = useState("")
@@ -70,13 +69,16 @@ function ProductsPage() {
 
   return (
     <main className={styles.container}>
-      <section className={styles.hero} style={{ marginBottom: "2rem" }}>
-        <p className={styles.eyebrow}>Live 1</p>
-        <h2 className={styles.title} style={{ fontSize: "2rem", fontWeight: "700", marginBottom: "0.5rem" }}>
-          Catálogo de Productos
-        </h2>
-        <p className={styles.copy} style={{ color: "#666" }}>
-          Explora nuestro catálogo, busca tu producto favorito y gestiona el stock en tiempo real.
+      <section className={styles.hero}>
+        <p className={styles.eyebrow}>Catálogo</p>
+
+        <h1 className={styles.title}>
+          Descubre tu próxima película favorita
+        </h1>
+
+        <p className={styles.description}>
+          Explora nuestro catálogo, encuentra clásicos, novedades y añade tus
+          películas favoritas al carrito.
         </p>
       </section>
 
@@ -106,20 +108,12 @@ function ProductsPage() {
 
       {/* Si es admin, mostramos el botón para añadir producto */}
       {isAdmin && (
-        <div style={{ marginBottom: "1.5rem" }}>
-          <Link 
-            to="/admin/products/new" 
-            style={{
-              backgroundColor: "#2e7d32",
-              color: "#fff",
-              padding: "0.75rem 1.25rem",
-              borderRadius: "6px",
-              textDecoration: "none",
-              fontWeight: "600",
-              display: "inline-block"
-            }}
+        <div className={styles.adminActions}>
+          <Link
+            to="/admin/products/new"
+            className={styles.addButton}
           >
-            + Añadir Nuevo Producto
+            + Nuevo producto
           </Link>
         </div>
       )}

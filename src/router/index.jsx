@@ -8,12 +8,14 @@ import LoginPage from '../pages/LoginPage/LoginPage';
 import RegisterPage from '../pages/RegisterPage/RegisterPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import CartPage from '../pages/CartPage/CartPage';
+import WishlistPage from '../pages/WishlistPage/WishlistPage';
 import CheckoutPage from '../pages/CheckoutPage/CheckoutPage';
 import CheckoutSuccessPage from '../pages/CheckoutSuccessPage/CheckoutSuccessPage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
+import { authStorage } from '../utils/authStorage';
 
 const isAdminUser = () => {
-  return localStorage.getItem('admin') === 'true';
+  return authStorage.admin === 'true';
 };
 
 const AdminRoute = ({ children }) => {
@@ -60,6 +62,10 @@ export const router = createBrowserRouter([
       {
         path: 'cart',
         element: <CartPage />
+      },
+      {
+        path: 'wishlist',
+        element: <WishlistPage />
       },
       {
         path: 'checkout',

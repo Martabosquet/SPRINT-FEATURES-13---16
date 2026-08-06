@@ -1,0 +1,177 @@
+.card {
+  background: white;
+  border-radius: 1.25rem;
+  border: 1px solid #e7dfd5;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+}
+
+
+.card h3 {
+  margin-top: 0;
+
+  margin-bottom: 1.5rem;
+
+  font-family: Georgia, serif;
+
+  color: #1f2933;
+
+  font-size: 1.5rem;
+}
+
+
+.form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 1.25rem;
+}
+
+
+.field {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.6rem;
+}
+
+
+.field label {
+  font-size: 0.9rem;
+
+  font-weight: 700;
+
+  color: #475569;
+}
+
+
+.input {
+  padding: 0.75rem 1rem;
+
+  border-radius: 0.6rem;
+
+  border: 1px solid #cbd5e1;
+
+  font-size: 0.95rem;
+
+  background: #f8fafc;
+}
+
+
+.input:focus {
+  outline: none;
+
+  border-color: #8b5e3c;
+
+  background: white;
+}
+
+
+.genres {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 0.75rem;
+}
+
+
+.genre,
+.selectedGenre {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.4rem;
+
+  padding: 0.45rem 0.8rem;
+
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  font-size: 0.85rem;
+
+  transition: .2s;
+}
+
+
+.genre {
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+
+}
+
+
+.selectedGenre {
+
+  background: #f3ebe2;
+
+  border: 1px solid #8b5e3c;
+
+  color: #8b5e3c;
+
+}
+
+
+.genre input,
+.selectedGenre input {
+
+  display: none;
+
+}
+
+
+.button {
+
+  background: #1f2933;
+
+  color: white;
+
+  border: none;
+
+  padding: 0.9rem;
+
+  border-radius: 0.8rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: .25s;
+}
+
+
+.button:hover {
+
+  background: #8b5e3c;
+
+}
+
+
+.success {
+
+  margin: 0;
+
+  color: #4f7c59;
+
+  font-weight: 700;
+
+}
+
+
+@media(max-width:700px){
+
+  .card {
+
+    padding:1.25rem;
+
+  }
+
+}

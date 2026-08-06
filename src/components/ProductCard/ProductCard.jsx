@@ -3,17 +3,18 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import WishlistButton from '../WishlistButton/WishlistButton';
 import { deleteProduct } from '../../api/products';
+import { authStorage } from '../../utils/authStorage';
 import styles from './ProductCard.module.css';
 
 export default function ProductCard({ product, onProductDeleted }) {
   const [imgSrc, setImgSrc] = useState(product.imageUrl);
-  const [userName, setUserName] = useState(() => localStorage.getItem('userName'));
-  const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem('admin') === 'true');
+  const [userName, setUserName] = useState(() => authStorage.userName);
+  const [isAdmin, setIsAdmin] = useState(() => authStorage.admin === 'true');
 
   useEffect(() => {
     const syncAuth = () => {
-      setUserName(localStorage.getItem('userName'));
-      setIsAdmin(localStorage.getItem('admin') === 'true');
+      setUserName(authStorage.userName);
+      setIsAdmin(authStorage.admin === 'true');
     };
 
     window.addEventListener('authChange', syncAuth);
@@ -84,8 +85,20 @@ export default function ProductCard({ product, onProductDeleted }) {
         <h3 className={styles.title}>{product.name}</h3>
         <p className={styles.price}>{Number(product.price).toFixed(2)} €</p>
 
-        <p className={styles.stock}>
-          Stock disponible: <strong>{isAgotado ? '0' : maxStock}</strong>
+        <p
+          className={`${styles.stock} ${
+            isAgotado
+              ? styles.outOfStock
+              : maxStock <= 5
+              ? styles.lowStock
+              : styles.inStock
+          }`}
+        >
+          {isAgotado
+            ? '❌ Agotado'
+            : maxStock <= 5
+            ? '⚠️ Pocas unidades disponibles'
+            : '✓ Disponible'}
         </p>
 
         <Link

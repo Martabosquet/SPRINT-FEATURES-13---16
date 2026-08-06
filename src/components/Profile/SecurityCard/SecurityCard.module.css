@@ -1,0 +1,225 @@
+.card {
+
+  background:white;
+
+  border-radius:1.25rem;
+
+  padding:2rem;
+
+  border:1px solid #e7dfd5;
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:1.5rem;
+
+}
+
+
+
+.card h3 {
+
+  margin:0;
+
+  font-family:Georgia,serif;
+
+  font-size:1.3rem;
+
+  color:#1f2933;
+
+}
+
+
+
+.form {
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:1.2rem;
+
+}
+
+
+
+.field {
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:.5rem;
+
+}
+
+
+
+.field label {
+
+  font-size:.85rem;
+
+  font-weight:700;
+
+  color:#475569;
+
+}
+
+
+
+.input {
+
+  padding:.75rem 1rem;
+
+  border-radius:.6rem;
+
+  border:1px solid #cbd5e1;
+
+  background:#fafafa;
+
+}
+
+
+
+.input:focus {
+
+  outline:none;
+
+  border-color:#8b5e3c;
+
+}
+
+
+
+.button {
+
+  background:#1f2933;
+
+  color:white;
+
+  border:none;
+
+  padding:.9rem;
+
+  border-radius:.7rem;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+}
+
+
+
+.button:hover {
+
+  background:#8b5e3c;
+
+}
+
+
+
+.button:disabled {
+
+  opacity:.6;
+
+  cursor:not-allowed;
+
+}
+
+
+
+.divider {
+
+  border:none;
+
+  border-top:1px solid #e7dfd5;
+
+  margin:1rem 0;
+
+}
+
+
+
+.success {
+
+  color:#4f7c59;
+
+  font-size:.9rem;
+
+}
+
+
+
+.error {
+
+  color:#b91c1c;
+
+  font-size:.9rem;
+
+}
+
+
+
+.dangerZone {
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:.75rem;
+
+}
+
+
+
+.dangerZone h4 {
+
+  margin:0;
+
+  color:#dc2626;
+
+}
+
+
+
+.dangerZone p {
+
+  margin:0;
+
+  color:#64748b;
+
+}
+
+
+
+.deleteButton {
+
+  align-self:flex-start;
+
+  background:#fee2e2;
+
+  color:#dc2626;
+
+  border:1px solid #fca5a5;
+
+  padding:.7rem 1rem;
+
+  border-radius:.6rem;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+}
+
+
+
+.deleteButton:hover {
+
+  background:#dc2626;
+
+  color:white;
+
+}

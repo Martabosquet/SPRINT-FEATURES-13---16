@@ -1,205 +1,65 @@
 .container {
-  max-width: 1000px;
-  margin: 2rem auto;
-  padding: 0 1.5rem;
-  font-family: inherit;
-  color: #0f172a;
+
+  max-width:1100px;
+
+  margin:2rem auto;
+
+  padding:0 1.5rem;
+
 }
+
+
 
 .container h2 {
-  font-size: 2rem;
-  font-weight: 800;
-  margin-bottom: 1.5rem;
-  color: #0f172a;
+
+  font-family:Georgia,serif;
+
+  font-size:2rem;
+
+  color:#1f2933;
+
+  margin-bottom:2rem;
+
 }
 
-/* Alertas de éxito y error */
-.errorAlert {
-  background-color: #fee2e2;
-  color: #991b1b;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  border: 1px solid #f87171;
-}
 
-.successAlert {
-  background-color: #d1fae5;
-  color: #065f46;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  border: 1px solid #34d399;
-}
 
-/* Grid de dos columnas para pantallas grandes */
 .grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+
+  display:grid;
+
+  grid-template-columns:repeat(2,1fr);
+
+  gap:2rem;
+
+  margin-top:2rem;
+
 }
 
-@media (max-width: 768px) {
+
+
+.errorAlert {
+
+  background:#fee2e2;
+
+  color:#991b1b;
+
+  padding:1rem;
+
+  border-radius:.75rem;
+
+  margin-bottom:1.5rem;
+
+}
+
+
+
+@media(max-width:768px){
+
   .grid {
-    grid-template-columns: 1fr;
+
+    grid-template-columns:1fr;
+
   }
-}
 
-/* Tarjetas individuales de sección */
-.card {
-  background: white;
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f1f5f9;
-  display: flex;
-  flex-direction: column;
-}
-
-.card h3 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-  border-bottom: 2px solid #f1f5f9;
-  padding-bottom: 0.5rem;
-}
-
-/* Avatar del usuario */
-.avatarContainer {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-}
-
-.avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #e2e8f0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-/* Formularios y campos */
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.field label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #475569;
-}
-
-.input {
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #cbd5e1;
-  font-size: 0.95rem;
-  color: #0f172a;
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  background-color: #f8fafc;
-}
-
-.input:focus {
-  border-color: #0f172a;
-  background-color: white;
-  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
-}
-
-/* Botones principales y secundarios */
-.primaryButton {
-  margin-top: 0.5rem;
-  background-color: #0f172a;
-  color: white;
-  border: none;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.primaryButton:hover {
-  background-color: #334155;
-}
-
-.secondaryButton {
-  margin-top: 0.5rem;
-  background-color: #475569;
-  color: white;
-  border: none;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.secondaryButton:hover {
-  background-color: #334155;
-}
-
-/* Divisor estético */
-.divider {
-  border: 0;
-  height: 1px;
-  background-color: #e2e8f0;
-  margin: 2rem 0;
-}
-
-/* Zona de peligro */
-.dangerZone {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.dangerZone h4 {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #dc2626;
-  margin: 0;
-}
-
-.dangerZone p {
-  font-size: 0.85rem;
-  color: #64748b;
-  margin: 0;
-  line-height: 1.4;
-}
-
-.dangerButton {
-  background-color: #fee2e2;
-  color: #dc2626;
-  border: 1px solid #fca5a5;
-  padding: 0.65rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  align-self: flex-start;
-}
-
-.dangerButton:hover {
-  background-color: #dc2626;
-  color: white;
 }

@@ -1,9 +1,77 @@
 :root {
-  --primary-color: #e53e3e;
-  --primary-hover: #c53030;
-  --bg-color: #f7fafc;
-  --text-color: #2d3748;
-  --text-light: #718096;
-  --card-bg: #ffffff;
-  --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* =========================
+     COLORES PRINCIPALES
+  ========================== */
+
+  --color-primary: #8b5e3c;
+  --color-primary-hover: #6f472c;
+
+  --color-dark: #1f2933;
+
+  --color-background: #faf8f5;
+  --color-surface: #ffffff;
+
+  --color-border: #e8e1d9;
+
+  --color-text: #1f2933;
+  --color-text-muted: #64748b;
+
+
+  /* =========================
+     ESTADOS
+  ========================== */
+
+  --color-success: #4f7c59;
+  --color-warning: #b7791f;
+  --color-danger: #b91c1c;
+
+
+  /* =========================
+     ESPACIADOS
+  ========================== */
+
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+
+  /* =========================
+     BORDER RADIUS
+  ========================== */
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+
+  /* =========================
+     SOMBRAS
+  ========================== */
+
+  --shadow-sm: 0 10px 30px rgba(0, 0, 0, 0.06);
+
+  --shadow-md: 0 15px 35px rgba(0, 0, 0, 0.08);
+
+  --shadow-lg: 0 20px 45px rgba(0, 0, 0, 0.12);
+
+
+  /* =========================
+     TRANSICIONES
+  ========================== */
+
+  --transition: 0.25s ease;
+
+
+  /* =========================
+     TIPOGRAFÍA
+  ========================== */
+
+  --font-display: Georgia, serif;
+
+  --font-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
