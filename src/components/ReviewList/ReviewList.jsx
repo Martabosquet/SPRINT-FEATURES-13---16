@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import StarRating from '../StarRating/StarRating';
 import styles from './ReviewList.module.css';
 
@@ -34,7 +35,18 @@ export default function ReviewList({ reviews, loading, error }) {
             <div className={styles.header}>
               <div>
                 <p className={styles.author}>
-                  {reviewerName}
+                  {review.userId ? (
+                    <Link
+                      to={`/profile/${review.userId}`}
+                      className={styles.reviewerLink}
+                    >
+                      {reviewerName}
+                    </Link>
+                  ) : (
+                    // Si por lo que sea no hay userId (reviews antiguas, datos sueltos),
+                    // mostramos el nombre como texto plano en vez de un link roto
+                    <span>{reviewerName}</span>
+                  )}
                 </p>
 
                 {review.fechaDeVisualizacion && (
@@ -44,12 +56,9 @@ export default function ReviewList({ reviews, loading, error }) {
                 )}
               </div>
 
-                <div className={styles.rating}>
-                    <StarRating
-                        rating={review.rating}
-                        maxRating={10}
-                    />
-                </div>
+              <div className={styles.rating}>
+                <StarRating rating={review.rating} maxRating={10} />
+              </div>
             </div>
 
             <p className={styles.comment}>

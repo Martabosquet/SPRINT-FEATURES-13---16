@@ -1,0 +1,204 @@
+.container {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+  background: #faf7f2;
+}
+
+.profileCard {
+  width: 100%;
+  max-width: 560px;
+  background: white;
+  padding: 2.5rem;
+  border-radius: 1.5rem;
+  border: 1px solid #e7dfd5;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.avatarSection {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #8b5e3c;
+}
+
+.avatarPlaceholder {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8b5e3c 0%, #70462c 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: bold;
+  border: 3px solid #8b5e3c;
+}
+
+.userInfo {
+  text-align: center;
+  width: 100%;
+}
+
+.eyebrow {
+  display: block;
+  color: #8b5e3c;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.name {
+  margin: 0;
+  font-size: 2rem;
+  color: #1f2933;
+  font-weight: 700;
+}
+
+.memberSince {
+  margin: 0.5rem 0 0 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+/* --- Bio a modo de cita de crítico --- */
+.bio {
+  font-style: italic;
+  font-size: 1.05rem;
+  color: #475569;
+  line-height: 1.7;
+  text-align: center;
+  padding: 1.25rem 1.5rem;
+  background: #faf7f2;
+  border-left: 3px solid #8b5e3c;
+  border-radius: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+/* --- Favoritos como fichas --- */
+.favoritesSection {
+  margin-bottom: 1rem;
+}
+
+.sectionTitle {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #1f2933;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.favoritesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.favoriteCard {
+  background: #faf7f2;
+  border: 1px solid #e7dfd5;
+  border-radius: 0.9rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  transition: 0.2s ease;
+}
+
+.favoriteCard:hover {
+  border-color: #8b5e3c;
+  transform: translateY(-2px);
+}
+
+.favoriteLabel {
+  color: #8b5e3c;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.favoriteValue {
+  color: #1f2933;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.message {
+  text-align: center;
+  color: #64748b;
+  font-size: 1rem;
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+}
+
+.error h2 {
+  color: #dc2626;
+  margin-bottom: 1.5rem;
+}
+
+.backButton {
+  width: 100%;
+  padding: 0.8rem 1.5rem;
+  margin-top: 1.5rem;
+
+  background-color: #8b5e3c;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.backButton:hover {
+  background-color: #70462c;
+  transform: translateY(-1px);
+}
+
+.backButton:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 480px) {
+  .profileCard {
+    padding: 1.75rem;
+  }
+
+  .name {
+    font-size: 1.5rem;
+  }
+
+  .avatar,
+  .avatarPlaceholder {
+    width: 100px;
+    height: 100px;
+    font-size: 2.5rem;
+  }
+}

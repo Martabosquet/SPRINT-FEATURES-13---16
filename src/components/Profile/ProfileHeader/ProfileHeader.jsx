@@ -1,9 +1,12 @@
 import styles from './ProfileHeader.module.css';
 
 export default function ProfileHeader({
-  name,
-  email,
-  profileImage,
+    name,
+    email,
+    profileImage,
+    favoriteGenre,
+    favoriteMovie,
+    favoriteDirector,
 }) {
   const initial =
     name?.charAt(0).toUpperCase() || 'U';
@@ -32,10 +35,33 @@ export default function ProfileHeader({
         <p className={styles.email}>
           {email}
         </p>
+       
+        {(favoriteGenre || favoriteMovie || favoriteDirector) && (
 
-        <div className={styles.badge}>
-          🎬 Cinéfilo
-        </div>
+          <div className={styles.tags}>
+
+              {favoriteGenre && (
+                  <span className={styles.tag}>
+                      🎭 {favoriteGenre}
+                  </span>
+              )}
+
+              {favoriteMovie && (
+                  <span className={styles.tag}>
+                      🎬 {favoriteMovie}
+                  </span>
+              )}
+
+              {favoriteDirector && (
+                  <span className={styles.tag}>
+                      🎥 {favoriteDirector}
+                  </span>
+              )}
+
+          </div>
+
+      )}
+
       </div>
     </section>
   );

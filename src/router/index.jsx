@@ -7,6 +7,7 @@ import CreateProductPage from '../pages/CreateProductPage/CreateProductPage';
 import LoginPage from '../pages/LoginPage/LoginPage';
 import RegisterPage from '../pages/RegisterPage/RegisterPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
+import PublicProfilePage from '../pages/PublicProfilePage/PublicProfilePage';
 import CartPage from '../pages/CartPage/CartPage';
 import WishlistPage from '../pages/WishlistPage/WishlistPage';
 import CheckoutPage from '../pages/CheckoutPage/CheckoutPage';
@@ -58,6 +59,10 @@ export const router = createBrowserRouter([
       {
         path: 'profile',
         element: <ProfilePage />
+      },
+      {
+        path: '/profile/:userId',
+        element: <PublicProfilePage />
       },
       {
         path: 'cart',

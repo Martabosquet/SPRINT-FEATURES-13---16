@@ -181,15 +181,15 @@ export default function ProfilePage() {
 
 
 
-      <ProfileHeader
+  <ProfileHeader
+      name={profile.name}
+      email={profile.email}
+      profileImage={profile.profileImage}
 
-        name={profile.name}
-
-        email={profile.email}
-
-        profileImage={profile.profileImage}
-
-      />
+      favoriteGenre={profile.favoriteGenre}
+      favoriteMovie={profile.favoriteMovie}
+      favoriteDirector={profile.favoriteDirector}
+  />
 
 
 

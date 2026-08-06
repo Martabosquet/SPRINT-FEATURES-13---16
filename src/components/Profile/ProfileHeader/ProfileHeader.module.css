@@ -122,3 +122,29 @@
     font-size: 1.8rem;
   }
 }
+
+.tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.75rem;
+    margin-top:1rem;
+}
+
+.tag{
+    display:flex;
+    align-items:center;
+
+    padding:.45rem .9rem;
+
+    border-radius:999px;
+
+    background:#f8f4ef;
+
+    border:1px solid #d7c3ac;
+
+    color:#8b5e3c;
+
+    font-size:.85rem;
+
+    font-weight:600;
+}

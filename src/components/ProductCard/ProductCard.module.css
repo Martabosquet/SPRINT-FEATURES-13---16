@@ -105,6 +105,26 @@
   margin:0 0 .6rem;
 }
 
+/* Creador */
+.creator {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0 0 0.8rem;
+}
+
+.creatorLink {
+  color: #8b5e3c;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.creatorLink:hover {
+  color: #6f4e37;
+  text-decoration: underline;
+}
+
 /* Stock */
 .stock {
   font-size:.85rem;

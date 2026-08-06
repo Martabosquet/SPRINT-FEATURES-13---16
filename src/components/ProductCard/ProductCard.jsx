@@ -85,6 +85,18 @@ export default function ProductCard({ product, onProductDeleted }) {
         <h3 className={styles.title}>{product.name}</h3>
         <p className={styles.price}>{Number(product.price).toFixed(2)} €</p>
 
+        {(product.createdBy || product.author || product.userName) && (
+          <p className={styles.creator}>
+            Por:{' '}
+            <Link 
+              to={`/users/${product.createdBy || product.author || product.userName}`}
+              className={styles.creatorLink}
+            >
+              {product.createdBy || product.author || product.userName}
+            </Link>
+          </p>
+        )}
+
         <p
           className={`${styles.stock} ${
             isAgotado

@@ -46,3 +46,9 @@ export const deleteAccount = async () => {
 export const updateCinephileProfile = async (data) => {
   return api.patch('/api/profile/cinephile', data);
 };
+
+// Obtiene el perfil público de otro usuario por su id
+export const getPublicProfile = async (userId) => {
+  const response = await api.get(`/api/users/${userId}`);
+  return response.data;
+};

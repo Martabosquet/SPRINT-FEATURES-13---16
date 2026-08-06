@@ -33,6 +33,18 @@
   color: #1f2933;
 }
 
+.reviewerLink {
+  color: #8b5e3c;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.reviewerLink:hover {
+  color: #6f4e37;
+  text-decoration: underline;
+}
+
 .date {
   margin: 0.35rem 0 0;
   font-size: 0.85rem;
