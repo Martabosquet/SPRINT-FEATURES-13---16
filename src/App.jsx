@@ -3,8 +3,7 @@ import { RouterProvider } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { getCart } from './api/cart';
 import { setLocalCart } from './store/cartSlice';
-import { router } from './router/Index';
-
+import { router } from "./router/Index"
 export default function App() {
   const dispatch = useDispatch();
 
@@ -13,7 +12,7 @@ export default function App() {
       try {
         const cartData = await getCart();
         const items = Array.isArray(cartData) ? cartData : cartData?.items || [];
-        
+
         const formattedItems = items.map(item => ({
           id: item.id,
           productId: item.productId || item.product?.id,
