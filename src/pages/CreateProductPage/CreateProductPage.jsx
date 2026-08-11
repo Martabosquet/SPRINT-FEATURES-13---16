@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { createProduct } from '../../api/products';
+import FormInput from '../../components/FormInput/FormInput';
 import styles from './CreateProductPage.module.css';
 
 export default function CreateProductPage() {
@@ -15,45 +16,73 @@ export default function CreateProductPage() {
     stock: '',
   });
 
-  // Estado separado para almacenar el archivo de imagen seleccionado
+  const [formErrors, setFormErrors] = useState({});
   const [imageFile, setImageFile] = useState(null);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+
+    if (formErrors[name]) {
+      setFormErrors({ ...formErrors, [name]: null });
+    }
   };
 
-  // Manejador específico para el archivo
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setImageFile(e.target.files[0]);
     }
   };
 
+  const validate = () => {
+    const errors = {};
+
+    if (!form.name.trim()) {
+      errors.name = 'El nombre del producto es obligatorio.';
+    } else if (form.name.trim().length < 3) {
+      errors.name = 'El nombre debe tener al menos 3 caracteres.';
+    }
+
+    if (!form.price) {
+      errors.price = 'El precio es obligatorio.';
+    } else if (Number(form.price) <= 0) {
+      errors.price = 'El precio debe ser mayor que 0.';
+    }
+
+    if (!form.stock && form.stock !== 0) {
+      errors.stock = 'El stock es obligatorio.';
+    } else if (Number(form.stock) < 0) {
+      errors.stock = 'El stock no puede ser negativo.';
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validate()) return;
+
     setLoading(true);
     setError(null);
 
     try {
-      // Como vamos a enviar un archivo junto a los datos, 
-      // lo correcto es empaquetarlo todo en un FormData para Cloudinary / Multer
       const formData = new FormData();
-      formData.append('name', form.name);
+      formData.append('name', form.name.trim());
       formData.append('price', Number(form.price));
       formData.append('stock', Number(form.stock));
-      formData.append('description', form.description);
-      
+      formData.append('description', form.description.trim());
+
       if (imageFile) {
-        formData.append('image', imageFile); // 'image' debe coincidir con el nombre que espera tu backend (ej: upload.single('image'))
+        formData.append('image', imageFile);
       }
 
-      // Pasamos el formData a tu función de la api
       await createProduct(formData);
-
       navigate('/products');
     } catch (err) {
       console.error(err);
-      setError('No se pudo crear el producto. Comprueba los datos o la imagen.');
+      setError('No se pudo crear el producto. Comprueba los datos o la conexión.');
     } finally {
       setLoading(false);
     }
@@ -62,48 +91,45 @@ export default function CreateProductPage() {
   return (
     <div className={styles.container}>
       <h2>Añadir Nuevo Producto (Admin)</h2>
-      
+
       {error && <p className={styles.errorText}>{error}</p>}
 
-      <form onSubmit={handleSubmit} className={styles.form} encType="multipart/form-data">
-        <div className={styles.field}>
-          <label>Nombre del producto</label>
-          <input
-            type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            required
-            className={styles.input}
-          />
-        </div>
+      <form onSubmit={handleSubmit} className={styles.form} encType="multipart/form-data" noValidate>
+        <FormInput
+          label="Nombre del producto"
+          id="name"
+          name="name"
+          type="text"
+          value={form.name}
+          onChange={handleChange}
+          error={formErrors.name}
+          autoFocus
+          placeholder="Ej. Espada Láser"
+        />
 
-        <div className={styles.field}>
-          <label>Precio (€)</label>
-          <input
-            type="number"
-            step="0.01"
-            name="price"
-            value={form.price}
-            onChange={handleChange}
-            required
-            className={styles.input}
-          />
-        </div>
+        <FormInput
+          label="Precio (€)"
+          id="price"
+          name="price"
+          type="number"
+          step="0.01"
+          value={form.price}
+          onChange={handleChange}
+          error={formErrors.price}
+          placeholder="0.00"
+        />
 
-        <div className={styles.field}>
-          <label>Stock disponible</label>
-          <input
-            type="number"
-            name="stock"
-            value={form.stock}
-            onChange={handleChange}
-            required
-            className={styles.input}
-          />
-        </div>
+        <FormInput
+          label="Stock disponible"
+          id="stock"
+          name="stock"
+          type="number"
+          value={form.stock}
+          onChange={handleChange}
+          error={formErrors.stock}
+          placeholder="0"
+        />
 
-        {/* Input cambiado a tipo file para conectar con Cloudinary */}
         <div className={styles.field}>
           <label>Imagen del producto (Subir archivo)</label>
           <input
@@ -117,13 +143,15 @@ export default function CreateProductPage() {
         </div>
 
         <div className={styles.field}>
-          <label>Descripción</label>
+          <label htmlFor="description">Descripción</label>
           <textarea
+            id="description"
             name="description"
             value={form.description}
             onChange={handleChange}
             rows="4"
             className={styles.textarea}
+            placeholder="Escribe una breve descripción..."
           />
         </div>
 
