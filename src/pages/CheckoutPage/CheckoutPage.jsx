@@ -1,13 +1,15 @@
 import { useState } from "react"
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import { Elements } from "@stripe/react-stripe-js"
 
-import { checkoutOrder } from "../../api/orders"
-import { clearCart } from "../../store/cartSlice"
+import { createPaymentIntent } from "../../api/payments"
+import { stripePromise } from "../../utils/stripe"
 
 import Button from "../../components/Button/Button"
 
 import CheckoutForm from "./CheckoutForm"
+import PaymentForm from "./PaymentForm"
 import OrderSummary from "./OrderSummary"
 
 import styles from "./CheckoutPage.module.css"
@@ -15,7 +17,6 @@ import styles from "./CheckoutPage.module.css"
 
 export default function CheckoutPage() {
 
-  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const cartItems = useSelector(
@@ -29,14 +30,16 @@ export default function CheckoutPage() {
 
   const [formData, setFormData] = useState({
     street: "",
-    city: "Bakio",
+    city: "",
     postalCode: "",
-    country: "España",
+    country: "",
   })
-
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+
+  // Cuando esto tiene valor, cambiamos de "fase dirección" a "fase pago"
+  const [clientSecret, setClientSecret] = useState(null)
 
 
   const stockIssues = cartItems.filter(
@@ -44,12 +47,10 @@ export default function CheckoutPage() {
       Number(item.quantity) > Number(item.stock)
   )
 
-
   const hasStockIssue = stockIssues.length > 0
 
-
   const totalPrice = cartItems.reduce(
-    (sum,item)=>
+    (sum, item) =>
       sum +
       Number(item.price) *
       Number(item.quantity),
@@ -57,161 +58,104 @@ export default function CheckoutPage() {
   )
 
 
-  const handleChange = (e)=>{
-
+  const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     })
-
   }
 
 
-  const handleSubmit = async(e)=>{
+  // Ya no crea el pedido: valida la dirección y crea el PaymentIntent,
+  // que es lo que nos permite mostrar el formulario de tarjeta después.
+  const handleContinueToPayment = async (e) => {
 
     e.preventDefault()
-
     setError("")
 
-
-    if(
+    if (
       !formData.street ||
-      !formData.postalCode
-    ){
-      setError(
-        "Completa los datos de entrega."
-      )
+      !formData.city ||
+      !formData.postalCode ||
+      !formData.country
+    ) {
+      setError("Completa todos los datos de entrega.")
       return
     }
 
-
     setLoading(true)
 
-
-    try{
-
-      const response = await checkoutOrder({
-        shippingAddress: formData
-      })
-
-
-      if(response.ok){
-
-        dispatch(clearCart())
-
-        navigate(
-          "/checkout-success",
-          {
-            state:{
-              order: response.data
-            }
-          }
-        )
-      }
-
-
-    }catch(err){
-
+    try {
+      const response = await createPaymentIntent(formData)
+      setClientSecret(response.data.clientSecret)
+    } catch (err) {
       setError(
         err.response?.data?.error ||
-        "No se pudo crear el pedido."
+        "No se pudo iniciar el proceso de pago."
       )
-
-
-    }finally{
-
+    } finally {
       setLoading(false)
-
     }
-
   }
 
 
-
-  if(cartItems.length===0){
-
-    return(
+  if (cartItems.length === 0) {
+    return (
       <div className={styles.empty}>
         <h2>Tu carrito está vacío</h2>
-
-        <p>
-          Añade productos antes de finalizar el pedido.
-        </p>
-
-        <Button
-          onClick={()=>navigate("/products")}
-        >
+        <p>Añade productos antes de finalizar el pedido.</p>
+        <Button onClick={() => navigate("/products")}>
           Ver productos
         </Button>
-
       </div>
     )
   }
 
 
-
-  return(
+  return (
 
     <main className={styles.page}>
-
 
       <h1 className={styles.title}>
         Finaliza tu pedido
       </h1>
 
-
       <div className={styles.trust}>
-
         🚚 Entrega gratuita en Bakio
-
         <span>•</span>
-
         🔒 Compra segura
-
         <span>•</span>
-
         ⚽ Merchandising oficial
-
       </div>
-
-
 
       <div className={styles.layout}>
 
-
-        <CheckoutForm
-
-          user={user}
-
-          formData={formData}
-
-          onChange={handleChange}
-
-          onSubmit={handleSubmit}
-
-          loading={loading}
-
-          error={error}
-
-          disabled={hasStockIssue}
-
-          stockIssues={stockIssues}
-
-        />
-
-
+        {!clientSecret ? (
+          <CheckoutForm
+            user={user}
+            formData={formData}
+            onChange={handleChange}
+            onSubmit={handleContinueToPayment}
+            loading={loading}
+            error={error}
+            disabled={hasStockIssue}
+            stockIssues={stockIssues}
+          />
+        ) : (
+          <Elements
+            stripe={stripePromise}
+            options={{ clientSecret, locale: "es" }}
+          >
+            <PaymentForm total={totalPrice} />
+          </Elements>
+        )}
 
         <OrderSummary
-
           items={cartItems}
-
           total={totalPrice}
-
         />
 
-
       </div>
-
 
     </main>
 

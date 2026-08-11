@@ -2,155 +2,183 @@ import styles from "./CheckoutPage.module.css"
 
 
 export default function CheckoutForm({
- user,
- formData,
- onChange,
- onSubmit,
- loading,
- error,
- disabled,
- stockIssues
-}){
+    user,
+    formData,
+    onChange,
+    onSubmit,
+    loading,
+    error,
+    disabled,
+    stockIssues
+}) {
 
 
-return (
+    return (
 
-<section className={styles.card}>
-
-
-<h2>
-Datos de entrega
-</h2>
+        <section className={styles.card}>
 
 
-<div className={styles.userBox}>
-
-<strong>
-{user.name}
-</strong>
-
-<span>
-{user.email}
-</span>
-
-</div>
+            <h2>
+                Datos de entrega
+            </h2>
 
 
+            <div className={styles.userBox}>
 
-<form
-onSubmit={onSubmit}
-className={styles.form}
->
+                <strong>
+                    {user.name}
+                </strong>
 
+                <span>
+                    {user.email}
+                </span>
 
-<label>
-Dirección
-<input
-name="street"
-placeholder="Ej: Calle Mayor 12"
-value={formData.street}
-onChange={onChange}
-/>
-</label>
+            </div>
 
 
 
-<label>
-Código postal
-
-<input
-name="postalCode"
-placeholder="48130"
-value={formData.postalCode}
-onChange={onChange}
-/>
-
-</label>
+            <form
+                onSubmit={onSubmit}
+                className={styles.form}
+            >
 
 
-
-<div className={styles.delivery}>
-
-🚚
-
-<div>
-
-<strong>
-Entrega gratuita
-</strong>
-
-<p>
-Te lo entregaremos personalmente en Bakio.
-Nos pondremos en contacto contigo.
-</p>
-
-</div>
-
-</div>
+                <label>
+                    Dirección
+                    <input
+                        name="street"
+                        placeholder="Ej: Calle Mayor 12"
+                        value={formData.street}
+                        onChange={onChange}
+                    />
+                </label>
 
 
 
-<div className={styles.payment}>
+                <label>
+                    Ciudad
 
-💳
+                    <input
+                        name="city"
+                        placeholder="Ej: Bakio"
+                        value={formData.city}
+                        onChange={onChange}
+                    />
 
-<div>
-
-<strong>
-Pago seguro
-</strong>
-
-<p>
-Preparado para Stripe.
-</p>
-
-</div>
-
-</div>
+                </label>
 
 
 
-{stockIssues.length>0 &&
+                <label>
+                    Código postal
 
-<div className={styles.stock}>
+                    <input
+                        name="postalCode"
+                        placeholder="48130"
+                        value={formData.postalCode}
+                        onChange={onChange}
+                    />
 
-⚠ Hay productos sin stock suficiente.
-
-</div>
-
-}
-
-
-
-{error &&
-
-<p className={styles.error}>
-{error}
-</p>
-
-}
+                </label>
 
 
 
-<button
-disabled={loading || disabled}
-className={styles.button}
->
+                <label>
+                    País
 
-{
-loading
-? "Procesando..."
-: "Confirmar pedido"
-}
+                    <input
+                        name="country"
+                        placeholder="Ej: España"
+                        value={formData.country}
+                        onChange={onChange}
+                    />
 
-</button>
-
-
-</form>
+                </label>
 
 
-</section>
 
-)
+                <div className={styles.delivery}>
+
+                    🚚
+
+                    <div>
+
+                        <strong>
+                            Entrega gratuita
+                        </strong>
+
+                        <p>
+                            Te lo entregaremos personalmente en Bakio.
+                            Nos pondremos en contacto contigo.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div className={styles.payment}>
+
+                    💳
+
+                    <div>
+
+                        <strong>
+                            Pago seguro
+                        </strong>
+
+                        <p>
+                            Preparado para Stripe.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                {stockIssues.length > 0 &&
+
+                    <div className={styles.stock}>
+
+                        ⚠ Hay productos sin stock suficiente.
+
+                    </div>
+
+                }
+
+
+
+                {error &&
+
+                    <p className={styles.error}>
+                        {error}
+                    </p>
+
+                }
+
+
+
+                <button
+                    disabled={loading || disabled}
+                    className={styles.button}
+                >
+
+                    {
+                        loading
+                            ? "Procesando..."
+                            : "Continuar al pago"
+                    }
+
+                </button>
+
+
+            </form>
+
+
+        </section>
+
+    )
 
 }
