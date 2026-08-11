@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { useProduct } from '../../hooks/useProduct';
@@ -22,7 +22,26 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState(null);
-  const userName = authStorage.userName;
+  const [userName, setUserName] = useState(() => authStorage.userName);
+  const [isAdmin, setIsAdmin] = useState(() => authStorage.admin === 'true');
+
+  // Mismo patrón de sincronización que ya usa ProductCard.jsx
+  useEffect(() => {
+    const syncAuth = () => {
+      setUserName(authStorage.userName);
+      setIsAdmin(authStorage.admin === 'true');
+    };
+
+    window.addEventListener('authChange', syncAuth);
+    window.addEventListener('storage', syncAuth);
+    syncAuth();
+
+    return () => {
+      window.removeEventListener('authChange', syncAuth);
+      window.removeEventListener('storage', syncAuth);
+    };
+  }, []);
+
   const {
     data: product,
     loading: productLoading,
@@ -95,7 +114,7 @@ export default function ProductDetailPage() {
       );
       navigate('/cart');
 
-    } catch(error) {
+    } catch (error) {
       console.error(error);
       setAddError(
         'No se pudo añadir el producto al carrito.'
@@ -105,7 +124,7 @@ export default function ProductDetailPage() {
     }
   };
 
-  if(productLoading){
+  if (productLoading) {
     return (
       <p className={styles.centeredMessage}>
         Cargando producto...
@@ -113,7 +132,7 @@ export default function ProductDetailPage() {
     );
   }
 
-  if(productError || !product){
+  if (productError || !product) {
     return (
       <div className={styles.centeredContainer}>
         <h2>
@@ -131,6 +150,8 @@ export default function ProductDetailPage() {
       </div>
     );
   }
+
+  const correctedId = product.id || product._id;
 
   return (
     <main className={styles.container}>
@@ -158,19 +179,18 @@ export default function ProductDetailPage() {
             {Number(product.price).toFixed(2)} €
           </p>
           <p
-            className={`${styles.stockInfo} ${
-              maxStock === 0
+            className={`${styles.stockInfo} ${maxStock === 0
                 ? styles.outOfStock
                 : maxStock <= 5
-                ? styles.lowStock
-                : styles.inStock
-            }`}
+                  ? styles.lowStock
+                  : styles.inStock
+              }`}
           >
             {maxStock === 0
               ? '❌ Agotado'
               : maxStock <= 5
-              ? '⚠️ Pocas unidades disponibles'
-              : '✓ Disponible'}
+                ? '⚠️ Pocas unidades disponibles'
+                : '✓ Disponible'}
           </p>
           <p className={styles.description}>
             {
@@ -220,10 +240,10 @@ export default function ProductDetailPage() {
           >
             {
               maxStock === 0
-              ? 'Agotado'
-              : adding
-                ? 'Añadiendo...'
-                : 'Añadir al carrito'
+                ? 'Agotado'
+                : adding
+                  ? 'Añadiendo...'
+                  : 'Añadir al carrito'
             }
           </button>
           {addError && (
@@ -231,6 +251,16 @@ export default function ProductDetailPage() {
               {addError}
             </p>
           )}
+
+          {isAdmin && (
+            <Link
+              to={`/admin/products/${correctedId}/edit`}
+              className={styles.editButton}
+            >
+              ✏️ Editar producto
+            </Link>
+          )}
+
           <Link
             to="/products"
             className={styles.backLink}
@@ -243,25 +273,25 @@ export default function ProductDetailPage() {
         <RatingSummary reviews={reviews} />
 
         <ReviewList
-            reviews={reviews}
-            loading={reviewsLoading}
-            error={reviewsError}
+          reviews={reviews}
+          loading={reviewsLoading}
+          error={reviewsError}
         />
 
         {userName ? (
-            <ReviewForm
-                productId={product.id || product._id}
-                onReviewAdded={handleReviewAdded}
-            />
+          <ReviewForm
+            productId={product.id || product._id}
+            onReviewAdded={handleReviewAdded}
+          />
         ) : (
-            <p>
-                <Link to="/login">
-                    Inicia sesión
-                </Link>{' '}
-                para dejar una valoración.
-            </p>
+          <p>
+            <Link to="/login">
+              Inicia sesión
+            </Link>{' '}
+            para dejar una valoración.
+          </p>
         )}
-    </section>
+      </section>
     </main>
   );
 }

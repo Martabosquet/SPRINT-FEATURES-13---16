@@ -10,11 +10,10 @@ function ProductsPage() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
-  const isAdmin = authStorage.admin === 'true'; 
+  const isAdmin = authStorage.admin === 'true';
 
-  // Estados para los filtros
   const [searchTerm, setSearchTerm] = useState("")
-  const [sortOrder, setSortOrder] = useState("default") // Nuevo estado de ordenación
+  const [sortOrder, setSortOrder] = useState("default")
 
   useEffect(() => {
     async function loadProducts() {
@@ -31,13 +30,21 @@ function ProductsPage() {
     loadProducts()
   }, [])
 
-  // 1. Filtrar por texto de búsqueda
+  // Quita el producto borrado del estado local, para que la tarjeta
+  // desaparezca al instante sin necesidad de recargar la página.
+  const handleProductDeleted = (deletedId) => {
+    setProducts((currentProducts) =>
+      currentProducts.filter(
+        (product) => (product.id || product._id) !== deletedId
+      )
+    );
+  };
+
   const filteredProducts = products.filter((product) => {
     const productName = product.name || ""
     return productName.toLowerCase().includes(searchTerm.toLowerCase())
   })
 
-  // 2. Ordenar los productos filtrados
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sortOrder === "price-asc") {
       return Number(a.price) - Number(b.price)
@@ -51,7 +58,7 @@ function ProductsPage() {
     if (sortOrder === "name-desc") {
       return (b.name || "").localeCompare(a.name || "")
     }
-    return 0; // 'default'
+    return 0;
   })
 
   if (loading) {
@@ -82,7 +89,6 @@ function ProductsPage() {
         </p>
       </section>
 
-      {/* Barra de controles con clases limpias de CSS modules */}
       <div className={styles.filtersBar}>
         <input
           type="text"
@@ -106,7 +112,6 @@ function ProductsPage() {
         </select>
       </div>
 
-      {/* Si es admin, mostramos el botón para añadir producto */}
       {isAdmin && (
         <div className={styles.adminActions}>
           <Link
@@ -118,7 +123,6 @@ function ProductsPage() {
         </div>
       )}
 
-      {/* Listado de productos */}
       {sortedProducts.length === 0 ? (
         <div className={styles.noResults}>
           <p>No se encontraron productos que coincidan con tu búsqueda.</p>
@@ -126,7 +130,11 @@ function ProductsPage() {
       ) : (
         <div className={styles.grid}>
           {sortedProducts.map((product) => (
-            <ProductCard key={product.id || product._id} product={product} />
+            <ProductCard
+              key={product.id || product._id}
+              product={product}
+              onProductDeleted={handleProductDeleted}
+            />
           ))}
         </div>
       )}

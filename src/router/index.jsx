@@ -4,6 +4,7 @@ import HomePage from '../pages/HomePage/HomePage';
 import ProductsPage from '../pages/ProductsPage/ProductsPage';
 import ProductDetailPage from '../pages/ProductDetailPage/ProductDetailPage';
 import CreateProductPage from '../pages/CreateProductPage/CreateProductPage';
+import EditProductPage from '../pages/CreateProductPage/EditProductPage';
 import LoginPage from '../pages/LoginPage/LoginPage';
 import RegisterPage from '../pages/RegisterPage/RegisterPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
@@ -19,8 +20,23 @@ const isAdminUser = () => {
   return authStorage.admin === 'true';
 };
 
+// Ya no depende solo de "admin": comprobamos si hay sesión iniciada,
+// usando la misma señal que ya usa el resto de la app (Header, ProductCard...).
+const isLoggedIn = () => {
+  return Boolean(authStorage.userName);
+};
+
 const AdminRoute = ({ children }) => {
   return isAdminUser() ? children : <Navigate to="/products" replace />;
+};
+
+// Exige solo sesión iniciada, sin importar el rol.
+// Si no hay sesión, redirige a /login, guardando la ruta de origen en el
+// state para poder devolver al usuario ahí después de iniciar sesión.
+const ProtectedRoute = ({ children }) => {
+  return isLoggedIn()
+    ? children
+    : <Navigate to="/login" replace state={{ from: window.location.pathname }} />;
 };
 
 export const router = createBrowserRouter([
@@ -49,6 +65,14 @@ export const router = createBrowserRouter([
         )
       },
       {
+        path: 'admin/products/:id/edit',
+        element: (
+          <AdminRoute>
+            <EditProductPage />
+          </AdminRoute>
+        )
+      },
+      {
         path: 'login',
         element: <LoginPage />
       },
@@ -58,7 +82,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'profile',
-        element: <ProfilePage />
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        )
       },
       {
         path: '/profile/:userId',
@@ -66,19 +94,35 @@ export const router = createBrowserRouter([
       },
       {
         path: 'cart',
-        element: <CartPage />
+        element: (
+          <ProtectedRoute>
+            <CartPage />
+          </ProtectedRoute>
+        )
       },
       {
         path: 'wishlist',
-        element: <WishlistPage />
+        element: (
+          <ProtectedRoute>
+            <WishlistPage />
+          </ProtectedRoute>
+        )
       },
       {
         path: 'checkout',
-        element: <CheckoutPage />
+        element: (
+          <ProtectedRoute>
+            <CheckoutPage />
+          </ProtectedRoute>
+        )
       },
       {
         path: 'checkout-success',
-        element: <CheckoutSuccessPage />
+        element: (
+          <ProtectedRoute>
+            <CheckoutSuccessPage />
+          </ProtectedRoute>
+        )
       },
       {
         path: '*',

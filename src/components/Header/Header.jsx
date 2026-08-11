@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import { logout } from '../../api/auth';
 import { authStorage, clearSession, notifyAuthChange } from '../../utils/authStorage';
+import { logout as logoutRequest } from '../../api/auth';
+import { logout as logoutAction } from '../../store/authSlice';
 
 import styles from './Header.module.css';
 
@@ -11,6 +13,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [userName, setUserName] = useState(authStorage.userName);
   const [userProfileImage, setUserProfileImage] = useState(authStorage.userProfileImage);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector(
     (state) => state.cart.items
@@ -51,19 +54,17 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      await logout();
-    } catch(error){
-      console.error(
-        'Error cerrando sesión:',
-        error
-      );
+      await logoutRequest();
+    } catch (error) {
+      console.error('Error cerrando sesión:', error);
     }
-
     clearSession();
+    dispatch(logoutAction()); // limpia también el estado de Redux
     notifyAuthChange();
     closeMenu();
     navigate('/');
   };
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -82,16 +83,15 @@ export default function Header() {
           ☰
         </button>
         <nav
-          className={`${styles.nav} ${
-            isOpen ? styles.open : ''
-          }`}
+          className={`${styles.nav} ${isOpen ? styles.open : ''
+            }`}
         >
           <NavLink
             to="/"
-            className={({isActive}) =>
+            className={({ isActive }) =>
               isActive
-              ? `${styles.link} ${styles.active}`
-              : styles.link
+                ? `${styles.link} ${styles.active}`
+                : styles.link
             }
             onClick={closeMenu}
           >
@@ -99,10 +99,10 @@ export default function Header() {
           </NavLink>
           <NavLink
             to="/products"
-            className={({isActive}) =>
+            className={({ isActive }) =>
               isActive
-              ? `${styles.link} ${styles.active}`
-              : styles.link
+                ? `${styles.link} ${styles.active}`
+                : styles.link
             }
             onClick={closeMenu}
           >
@@ -143,15 +143,15 @@ export default function Header() {
                 <div className={styles.avatar}>
                   {
                     userProfileImage
-                    ?
-                    <img
-                      src={userProfileImage}
-                      alt="Perfil"
-                    />
-                    :
-                    userName
-                      .charAt(0)
-                      .toUpperCase()
+                      ?
+                      <img
+                        src={userProfileImage}
+                        alt="Perfil"
+                      />
+                      :
+                      userName
+                        .charAt(0)
+                        .toUpperCase()
                   }
                 </div>
               </Link>
@@ -170,16 +170,16 @@ export default function Header() {
               </button>
             </div>
           )
-          :
-          (
-            <NavLink
-              to="/login"
-              className={styles.login}
-              onClick={closeMenu}
-            >
-              Entrar
-            </NavLink>
-          )
+            :
+            (
+              <NavLink
+                to="/login"
+                className={styles.login}
+                onClick={closeMenu}
+              >
+                Entrar
+              </NavLink>
+            )
           }
         </nav>
       </div>

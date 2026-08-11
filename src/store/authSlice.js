@@ -1,3 +1,4 @@
+import { createSlice } from '@reduxjs/toolkit';
 import { authStorage } from '../utils/authStorage';
 
 const initialState = {
@@ -11,29 +12,32 @@ const initialState = {
   token: authStorage.token || null,
 };
 
-export default function authReducer(state = initialState, action) {
-  switch (action.type) {
-    case "LOGIN_SUCCESS":
-      return {
-        ...state,
-        token: action.payload.token,
-        user: action.payload.user,
+const authSlice = createSlice({
+  name: 'auth',
+  initialState,
+  reducers: {
+    // Se dispara justo tras un login correcto
+    loginSuccess: (state, action) => {
+      state.token = action.payload.token ?? state.token;
+      state.user = {
+        ...state.user,
+        ...action.payload.user,
       };
-    case "UPDATE_USER":
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          ...action.payload,
-        },
+    },
+    // Para cambios parciales del usuario (ej: nueva foto de perfil, nombre editado)
+    updateUser: (state, action) => {
+      state.user = {
+        ...state.user,
+        ...action.payload,
       };
-    case "LOGOUT":
-      return {
-        ...state,
-        token: null,
-        user: { id: null, name: null, email: null, role: null, profileImage: null },
-      };
-    default:
-      return state;
-  }
-}
+    },
+    // Limpia el estado de auth en Redux (además de authStorage/localStorage)
+    logout: (state) => {
+      state.token = null;
+      state.user = { id: null, name: null, email: null, role: null, profileImage: null };
+    },
+  },
+});
+
+export const { loginSuccess, updateUser, logout } = authSlice.actions;
+export default authSlice.reducer;

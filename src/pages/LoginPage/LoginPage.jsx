@@ -6,6 +6,7 @@ import { login, getProfile } from '../../api/auth';
 import { getCart } from '../../api/cart';
 
 import { setLocalCart } from '../../store/cartSlice';
+import { loginSuccess, updateUser } from '../../store/authSlice';
 import { saveSession, notifyAuthChange } from '../../utils/authStorage';
 
 import FormInput from '../../components/FormInput/FormInput';
@@ -65,56 +66,35 @@ export default function LoginPage() {
 
 
     const loadProfileImage = async () => {
-
         try {
+            const profileData = await getProfile();
 
-            const profileData =
-                await getProfile();
-
-            // Intentamos acceder a la foto desde diferentes rutas posibles
-            const profileImage = 
+            const profileImage =
                 profileData?.profileImage ||
                 profileData?.data?.profileImage ||
                 profileData?.user?.profileImage ||
                 '';
 
-            saveSession({
-                userProfileImage: profileImage
-            });
-
+            saveSession({ userProfileImage: profileImage });
+            dispatch(updateUser({ profileImage })); // 👈 nuevo: sincroniza Redux también
         } catch (error) {
-
-            console.error(
-                'Error recuperando perfil:',
-                error
-            );
-
-            saveSession({
-                userProfileImage: ''
-            });
+            console.error('Error recuperando perfil:', error);
+            saveSession({ userProfileImage: '' });
+            dispatch(updateUser({ profileImage: '' })); // 👈 nuevo
         }
     };
 
 
-
     const loadCart = async () => {
-
         try {
-
             const userCart =
                 await getCart();
-
-
             if (Array.isArray(userCart)) {
-
                 dispatch(
                     setLocalCart(userCart)
                 );
-
             }
-
         } catch (error) {
-
             console.error(
                 'Error recuperando carrito:',
                 error
@@ -123,146 +103,88 @@ export default function LoginPage() {
     };
 
 
-
     const handleSubmit = async (event) => {
-
         event.preventDefault();
-
         setSubmitError('');
 
-
-        const validationErrors =
-            validate();
-
-
+        const validationErrors = validate();
         if (Object.keys(validationErrors).length > 0) {
-
             setErrors(validationErrors);
             return;
-
         }
-
 
         setErrors({});
         setLoading(true);
 
-
         try {
-
-            const data =
-                await login({
-                    email,
-                    password
-                });
-
+            const data = await login({ email, password });
 
             if (!data.ok) {
-
-                setSubmitError(
-                    'Email o contraseña incorrectos.'
-                );
-
+                setSubmitError('Email o contraseña incorrectos.');
                 return;
             }
 
+            const userPayload = {
+                id: data.user?.id ?? null,
+                name: data.user?.name || 'Usuario',
+                email: data.user?.email ?? null,
+                role: data.user?.role ?? null,
+            };
 
-
-            // Guardamos información básica de sesión
+            // Persistimos en localStorage (sobrevive a recargas)
             saveSession({
                 token: data.token || '',
-                userName:
-                    data.user?.name || 'Usuario',
-
-                admin:
-                    data.user?.role === 'admin'
-                        ? 'true'
-                        : 'false'
-
+                userName: userPayload.name,
+                userEmail: userPayload.email,
+                userRole: userPayload.role,
+                admin: userPayload.role === 'admin' ? 'true' : 'false',
             });
 
+            // Sincronizamos Redux al instante (sin esperar a un reload)
+            dispatch(loginSuccess({ token: data.token || '', user: userPayload })); // 👈 nuevo
 
-
-            // Datos adicionales del usuario
             await loadProfileImage();
-
-
-            // Sincronizamos carrito
             await loadCart();
 
-
-            // Actualizamos componentes que dependen de sesión
             notifyAuthChange();
-
-
 
             navigate('/products');
 
-
         } catch (error) {
-
-            console.error(
-                'Error al iniciar sesión:',
-                error
-            );
-
-
+            console.error('Error al iniciar sesión:', error);
             setSubmitError(
                 error.response?.data?.error ||
                 'Email o contraseña incorrectos.'
             );
-
-
         } finally {
-
             setLoading(false);
-
         }
-
     };
 
-
-
     return (
-
         <main className={styles.container}>
-
             <section className={styles.card}>
-
-
                 <header className={styles.header}>
-
                     <h1 className={styles.title}>
                         🎬 Atxurre CineClub
                     </h1>
-
-
                     <p className={styles.subtitle}>
                         Inicia sesión para acceder
                         a tu colección.
                     </p>
-
                 </header>
-
-
-
                 {isSessionExpired && (
-
                     <div className={styles.expiredAlert}>
                         Tu sesión ha caducado.
                         Por favor, vuelve a iniciar sesión.
                     </div>
-
                 )}
-
-
 
                 <form
                     onSubmit={handleSubmit}
                     className={styles.form}
                     noValidate
                 >
-
-
                     <FormInput
 
                         label="Email"
