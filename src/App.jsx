@@ -3,7 +3,7 @@ import { RouterProvider } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { getCart } from './api/cart';
 import { setLocalCart } from './store/cartSlice';
-import { router } from "./router/Index"
+import { router } from "./router/IndexTemp"
 export default function App() {
   const dispatch = useDispatch();
 
