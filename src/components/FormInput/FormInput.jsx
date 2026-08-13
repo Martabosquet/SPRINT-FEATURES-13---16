@@ -17,10 +17,11 @@ export default function FormInput({
     useEffect(() => {
         if (autoFocus && inputRef.current) {
             inputRef.current.focus();
-    }
+        }
     }, [autoFocus]);
 
     const errorId = `${id}-error`;
+    const isTextarea = type === 'textarea';
 
     return (
         <div className={clsx(styles.inputGroup, className)}>
@@ -33,19 +34,34 @@ export default function FormInput({
                 </label>
             )}
 
-            <input
-                id={id}
-                name={name || id}
-                type={type}
-                ref={inputRef}
-                aria-invalid={Boolean(error)}
-                aria-describedby={error ? errorId : undefined}
-                className={clsx(
-                    styles.input,
-                    error && styles.inputError
-                )}
-                {...props}
-            />
+            {isTextarea ? (
+                <textarea
+                    id={id}
+                    name={name || id}
+                    ref={inputRef}
+                    aria-invalid={Boolean(error)}
+                    aria-describedby={error ? errorId : undefined}
+                    className={clsx(
+                        styles.input,
+                        error && styles.inputError
+                    )}
+                    {...props}
+                />
+            ) : (
+                <input
+                    id={id}
+                    name={name || id}
+                    type={type}
+                    ref={inputRef}
+                    aria-invalid={Boolean(error)}
+                    aria-describedby={error ? errorId : undefined}
+                    className={clsx(
+                        styles.input,
+                        error && styles.inputError
+                    )}
+                    {...props}
+                />
+            )}
 
             {error && (
                 <span

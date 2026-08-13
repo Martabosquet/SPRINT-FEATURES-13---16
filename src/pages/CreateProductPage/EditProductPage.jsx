@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useProduct } from '../../hooks/useProduct';
 import { updateProduct } from '../../api/products';
+import { validateProductForm } from '../../utils/validateProductForm';
 import FormInput from '../../components/FormInput/FormInput';
-import styles from './CreateProductPage.module.css';
+import styles from '../CreateProductPage/CreateProductPage.module.css';
 
 export default function EditProductPage() {
     const { id } = useParams();
@@ -11,7 +12,8 @@ export default function EditProductPage() {
     const { data: product, loading: productLoading, error: productError } = useProduct(id);
 
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [submitError, setSubmitError] = useState(null);
+    const [errors, setErrors] = useState({});
 
     const [form, setForm] = useState({
         name: '',
@@ -20,7 +22,6 @@ export default function EditProductPage() {
         stock: '',
     });
 
-    const [formErrors, setFormErrors] = useState({});
     const [imageFile, setImageFile] = useState(null);
 
     useEffect(() => {
@@ -35,12 +36,7 @@ export default function EditProductPage() {
     }, [product]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm({ ...form, [name]: value });
-
-        if (formErrors[name]) {
-            setFormErrors({ ...formErrors, [name]: null });
-        }
+        setForm({ ...form, [e.target.name]: e.target.value });
     };
 
     const handleFileChange = (e) => {
@@ -49,55 +45,39 @@ export default function EditProductPage() {
         }
     };
 
-    const validate = () => {
-        const errors = {};
-
-        if (!form.name.trim()) {
-            errors.name = 'El nombre del producto es obligatorio.';
-        } else if (form.name.trim().length < 3) {
-            errors.name = 'El nombre debe tener al menos 3 caracteres.';
-        }
-
-        if (!form.price && form.price !== 0) {
-            errors.price = 'El precio es obligatorio.';
-        } else if (Number(form.price) <= 0) {
-            errors.price = 'El precio debe ser mayor que 0.';
-        }
-
-        if (!form.stock && form.stock !== 0) {
-            errors.stock = 'El stock es obligatorio.';
-        } else if (Number(form.stock) < 0) {
-            errors.stock = 'El stock no puede ser negativo.';
-        }
-
-        setFormErrors(errors);
-        return Object.keys(errors).length === 0;
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSubmitError(null);
 
-        if (!validate()) return;
+        const validationErrors = validateProductForm(form);
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
 
+        setErrors({});
         setLoading(true);
-        setError(null);
 
         try {
             const formData = new FormData();
-            formData.append('name', form.name.trim());
+            formData.append('name', form.name);
             formData.append('price', Number(form.price));
-            formData.append('stock', Number(form.stock));
-            formData.append('description', form.description.trim());
+            formData.append('stock', form.stock === '' ? 0 : Number(form.stock));
+            formData.append('description', form.description);
 
             if (imageFile) {
                 formData.append('image', imageFile);
             }
 
             await updateProduct(id, formData);
+
             navigate(`/products/${id}`);
         } catch (err) {
             console.error(err);
-            setError('No se pudo actualizar el producto. Comprueba los datos o la imagen.');
+            setSubmitError(
+                err.response?.data?.error ||
+                'No se pudo actualizar el producto. Comprueba los datos o la imagen.'
+            );
         } finally {
             setLoading(false);
         }
@@ -120,39 +100,36 @@ export default function EditProductPage() {
         <div className={styles.container}>
             <h2>Editar Producto (Admin)</h2>
 
-            {error && <p className={styles.errorText}>{error}</p>}
+            {submitError && <p className={styles.errorText}>{submitError}</p>}
 
             <form onSubmit={handleSubmit} className={styles.form} encType="multipart/form-data" noValidate>
                 <FormInput
                     label="Nombre del producto"
                     id="name"
-                    name="name"
                     type="text"
                     value={form.name}
                     onChange={handleChange}
-                    error={formErrors.name}
+                    error={errors.name}
                     autoFocus
                 />
 
                 <FormInput
                     label="Precio (€)"
                     id="price"
-                    name="price"
                     type="number"
                     step="0.01"
                     value={form.price}
                     onChange={handleChange}
-                    error={formErrors.price}
+                    error={errors.price}
                 />
 
                 <FormInput
                     label="Stock disponible"
                     id="stock"
-                    name="stock"
                     type="number"
                     value={form.stock}
                     onChange={handleChange}
-                    error={formErrors.stock}
+                    error={errors.stock}
                 />
 
                 <div className={styles.field}>
@@ -175,17 +152,14 @@ export default function EditProductPage() {
                     {imageFile && <small style={{ color: '#666' }}>Archivo seleccionado: {imageFile.name}</small>}
                 </div>
 
-                <div className={styles.field}>
-                    <label htmlFor="description">Descripción</label>
-                    <textarea
-                        id="description"
-                        name="description"
-                        value={form.description}
-                        onChange={handleChange}
-                        rows="4"
-                        className={styles.textarea}
-                    />
-                </div>
+                <FormInput
+                    label="Descripción"
+                    id="description"
+                    type="textarea"
+                    rows="4"
+                    value={form.description}
+                    onChange={handleChange}
+                />
 
                 <button type="submit" disabled={loading} className={styles.submitButton}>
                     {loading ? 'Guardando cambios...' : 'Guardar cambios'}

@@ -87,18 +87,14 @@ export default function LoginPage() {
 
     const loadCart = async () => {
         try {
-            const userCart =
-                await getCart();
-            if (Array.isArray(userCart)) {
-                dispatch(
-                    setLocalCart(userCart)
-                );
-            }
+            const cartData = await getCart();
+            // getCart() devuelve el carrito completo ({ id, items: [...] }),
+            // no un array directo — hay que extraer los items de forma
+            // consistente con el resto de la app (ProductDetailPage, CartPage).
+            const items = Array.isArray(cartData) ? cartData : cartData?.items || [];
+            dispatch(setLocalCart(items));
         } catch (error) {
-            console.error(
-                'Error recuperando carrito:',
-                error
-            );
+            console.error('Error recuperando carrito:', error);
         }
     };
 
@@ -168,23 +164,34 @@ export default function LoginPage() {
                     <h1 className={styles.title}>
                         🎬 Atxurre CineClub
                     </h1>
+
                     <p className={styles.subtitle}>
                         Inicia sesión para acceder
                         a tu colección.
                     </p>
+
                 </header>
+
+
+
                 {isSessionExpired && (
+
                     <div className={styles.expiredAlert}>
                         Tu sesión ha caducado.
                         Por favor, vuelve a iniciar sesión.
                     </div>
+
                 )}
+
+
 
                 <form
                     onSubmit={handleSubmit}
                     className={styles.form}
                     noValidate
                 >
+
+
                     <FormInput
 
                         label="Email"

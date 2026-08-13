@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { authStorage, clearSession, notifyAuthChange } from '../../utils/authStorage';
 import { logout as logoutRequest } from '../../api/auth';
 import { logout as logoutAction } from '../../store/authSlice';
+import { clearCart } from '../../store/cartSlice';
 
 import styles from './Header.module.css';
 
@@ -59,7 +60,8 @@ export default function Header() {
       console.error('Error cerrando sesión:', error);
     }
     clearSession();
-    dispatch(logoutAction()); // limpia también el estado de Redux
+    dispatch(logoutAction());
+    dispatch(clearCart());
     notifyAuthChange();
     closeMenu();
     navigate('/');
