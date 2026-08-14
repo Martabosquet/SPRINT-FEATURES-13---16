@@ -138,7 +138,7 @@ export default function EditProductPage() {
                         <img
                             src={product.imageUrl}
                             alt={product.name}
-                            style={{ width: '120px', borderRadius: '0.5rem', marginBottom: '0.5rem' }}
+                            className={styles.currentImage}
                         />
                     )}
                     <label>Cambiar imagen (opcional)</label>
@@ -146,10 +146,9 @@ export default function EditProductPage() {
                         type="file"
                         accept="image/*"
                         onChange={handleFileChange}
-                        className={styles.input}
-                        style={{ padding: '0.5rem' }}
+                        className={`${styles.input} ${styles.fileInput}`}
                     />
-                    {imageFile && <small style={{ color: '#666' }}>Archivo seleccionado: {imageFile.name}</small>}
+                    {imageFile && <small className={styles.selectedFileText}>Archivo seleccionado: {imageFile.name}</small>}
                 </div>
 
                 <FormInput
@@ -166,7 +165,7 @@ export default function EditProductPage() {
                 </button>
             </form>
 
-            <div style={{ marginTop: '1.5rem' }}>
+            <div className={styles.backLinkContainer}>
                 <Link to={`/products/${id}`} className={styles.backLink}>&larr; Cancelar y volver</Link>
             </div>
         </div>

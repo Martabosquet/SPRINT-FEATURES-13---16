@@ -71,47 +71,14 @@ export default function ProductDetailPage() {
         quantity
       );
 
-      const cartData =
-        await getCart();
+      const cartData = await getCart();
 
-      const items =
-        Array.isArray(cartData)
-          ? cartData
-          : cartData?.items || [];
+      // setLocalCart se encarga de extraer name/price/imageUrl/stock desde item.product internamente.
+      const items = Array.isArray(cartData)
+        ? cartData
+        : cartData?.items || [];
 
-      dispatch(
-        setLocalCart(
-          items.map((item) => ({
-            id:
-              item.id ??
-              item.cartItemId ??
-              item.productId,
-            productId:
-              item.productId ??
-              item.product?.id ??
-              item.id,
-            name:
-              item.product?.name ??
-              item.name ??
-              'Producto',
-            price:
-              Number(
-                item.product?.price ??
-                item.price ??
-                0
-              ),
-            imageUrl:
-              item.product?.imageUrl ??
-              item.imageUrl,
-            quantity:
-              item.quantity ?? 1,
-            stock:
-              item.product?.stock ??
-              item.stock ??
-              0,
-          }))
-        )
-      );
+      dispatch(setLocalCart(items));
       navigate('/cart');
 
     } catch (error) {
@@ -180,10 +147,10 @@ export default function ProductDetailPage() {
           </p>
           <p
             className={`${styles.stockInfo} ${maxStock === 0
-                ? styles.outOfStock
-                : maxStock <= 5
-                  ? styles.lowStock
-                  : styles.inStock
+              ? styles.outOfStock
+              : maxStock <= 5
+                ? styles.lowStock
+                : styles.inStock
               }`}
           >
             {maxStock === 0

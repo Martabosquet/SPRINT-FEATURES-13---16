@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import styles from "./Footer.module.css"
 
 export default function Footer() {
@@ -63,9 +64,9 @@ export default function Footer() {
         <p>© {year} Bakio Atxurre. Todos los derechos reservados.</p>
 
         <div className={styles.legal}>
-          <a href="/privacidad">Privacidad</a>
-          <a href="/cookies">Cookies</a>
-          <a href="/aviso-legal">Aviso legal</a>
+          <Link to="/privacidad">Privacidad</Link>
+          <Link to="/cookies">Cookies</Link>
+          <Link to="/aviso-legal">Aviso legal</Link>
         </div>
       </div>
     </footer>

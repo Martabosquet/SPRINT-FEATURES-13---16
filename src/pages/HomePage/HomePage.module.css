@@ -1,156 +1,373 @@
 .home {
-  max-width:1200px;
-  margin:auto;
-  padding:3rem 1.5rem;
+  max-width: 1200px;
+  margin: auto;
+  padding: 3rem 1.5rem;
 }
 
-/* HERO */
+/* ============================
+   HERO — entrada de cine
+   ============================ */
 
-.hero {
-  text-align:center;
-  padding:6rem 2rem;
-  background:#faf7f2;
-  border-radius:2rem;
-  margin-bottom:4rem;
+.ticket {
+  position: relative;
+  display: grid;
+  grid-template-areas:
+    "poster"
+    "info";
+  grid-template-columns: 1fr;
+  background: #fffdf9;
+  border: 1px solid #e7dfd5;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  margin-bottom: 4rem;
+  box-shadow: 0 20px 40px -20px rgba(31, 41, 51, 0.15);
+}
+
+.stamp {
+  position: absolute;
+  top: 1.5rem;
+  right: -2.75rem;
+  transform: rotate(38deg);
+  background: #c9a227;
+  color: #1f2933;
+  font-family: "Courier New", monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 0.3rem 3rem;
+  z-index: 2;
+}
+
+.ticketPoster {
+  grid-area: poster;
+  position: relative;
+  width: 100%;
+  background: #1f2933;
+  min-height: 220px;
+}
+
+.posterImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.posterPlaceholder {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+}
+
+/* Línea perforada decorativa: fuera del flujo del grid a propósito,
+   para que nunca pueda afectar a cómo se colocan poster/info. */
+.perforation {
+  display: none;
+}
+
+.ticketInfo {
+  grid-area: info;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .eyebrow {
-  display:block;
-  color:#8b5e3c;
-  font-size:.85rem;
-  font-weight:700;
-  letter-spacing:.2em;
-  margin-bottom:1.5rem;
+  display: block;
+  color: #8b5e3c;
+  font-family: "Courier New", monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
 }
 
-.hero h1 {
-  max-width:800px;
-  margin:0 auto 1rem;
-  font-family:Georgia,serif;
-  font-size:3.2rem;
-  line-height:1.15;
-  color:#1f2933;
+.ticketInfo h1 {
+  margin: 0 0 1rem;
+  font-family: Georgia, serif;
+  font-size: 2rem;
+  line-height: 1.15;
+  color: #1f2933;
 }
 
-.hero p {
-  max-width:650px;
-  margin:0 auto 2.5rem;
-  color:#64748b;
-  font-size:1.15rem;
-  line-height:1.7;
+.ticketInfo p {
+  max-width: 500px;
+  margin: 0 0 1.75rem;
+  color: #64748b;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.ticketMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  font-family: "Courier New", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  padding-bottom: 1.75rem;
+  margin-bottom: 1.75rem;
+  border-bottom: 1px dashed #e7dfd5;
 }
 
 .button {
-  display:inline-block;
-  background:#8b5e3c;
-  color:white;
-  padding:.9rem 2rem;
-  border-radius:.8rem;
-  font-weight:700;
-  text-decoration:none;
-  transition:.25s;
+  display: inline-block;
+  align-self: flex-start;
+  background: #8b5e3c;
+  color: white;
+  padding: 0.9rem 2rem;
+  border-radius: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: 0.25s;
 }
 
 .button:hover {
-  background:#70462c;
-  transform:translateY(-3px);
+  background: #70462c;
+  transform: translateY(-3px);
 }
 
-/* SECCIONES */
+.button:focus-visible {
+  outline: 3px solid #c9a227;
+  outline-offset: 2px;
+}
+
+/* A partir de aquí (tablet grande / desktop), pasamos a dos columnas
+   y activamos la línea perforada con sus "agujeros" troquelados */
+@media (min-width: 900px) {
+  .ticket {
+    grid-template-areas: "poster divider info";
+    grid-template-columns: 280px 0 1fr;
+  }
+
+  .ticketPoster {
+    min-height: 320px;
+  }
+
+  .posterPlaceholder {
+    min-height: 320px;
+  }
+
+  .perforation {
+    grid-area: divider;
+    display: block;
+    position: relative;
+    width: 0;
+    border-left: 2px dashed #e7dfd5;
+  }
+
+  .perforation::before,
+  .perforation::after {
+    content: "";
+    position: absolute;
+    left: -10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #faf7f2;
+  }
+
+  .perforation::before {
+    top: -9px;
+  }
+
+  .perforation::after {
+    bottom: -9px;
+  }
+
+  .ticketInfo {
+    padding: 3rem 3rem 3rem 2.5rem;
+  }
+
+  .ticketInfo h1 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .stamp {
+    display: none;
+  }
+}
+
+/* ============================
+   DESTACADOS
+   ============================ */
+
+.featured {
+  margin-bottom: 5rem;
+}
 
 .sectionHeader {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+}
+
+.marqueeLabel {
+  display: block;
+  color: #8b5e3c;
+  font-family: "Courier New", monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
 }
 
 .sectionHeader h2 {
-  font-family:Georgia,serif;
-  font-size:2rem;
-  color:#1f2933;
+  font-family: Georgia, serif;
+  font-size: 2rem;
+  color: #1f2933;
+  margin: 0;
 }
 
 .moreLink {
-  color:#8b5e3c;
-  text-decoration:none;
-  font-weight:600;
+  color: #8b5e3c;
+  text-decoration: none;
+  font-weight: 600;
 }
 
-/* FILOSOFIA */
+/* ============================
+   SALAS DEL CLUB
+   ============================ */
 
-.features {
-  margin-top:5rem;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1.5rem;
+.rooms {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 5rem;
 }
 
-.features article {
-  background:white;
-  border:1px solid #e7dfd5;
-  border-radius:1.25rem;
-  padding:2rem;
-  text-align:center;
+.room {
+  position: relative;
+  background: white;
+  border: 1px solid #e7dfd5;
+  border-top: 3px solid #8b5e3c;
+  border-radius: 1.25rem;
+  padding: 2rem;
 }
 
-.features span {
-  font-size:2rem;
+.roomTag {
+  display: inline-block;
+  font-family: "Courier New", monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8b5e3c;
+  background: #faf7f2;
+  border: 1px solid #e7dfd5;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  margin-bottom: 1rem;
 }
 
-.features h3 {
-  font-family:Georgia,serif;
-  color:#1f2933;
+.room h3 {
+  font-family: Georgia, serif;
+  font-size: 1.3rem;
+  color: #1f2933;
+  margin: 0 0 0.6rem;
 }
 
-.features p {
-  color:#64748b;
-  line-height:1.6;
+.room p {
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
 }
 
-/* CTA */
+/* ============================
+   CTA FINAL — marquesina
+   ============================ */
 
 .cta {
-  margin-top:5rem;
-  text-align:center;
-  background:#1f2933;
-  color:white;
-  padding:4rem 2rem;
-  border-radius:2rem;
+  position: relative;
+  text-align: center;
+  background: #1f2933;
+  color: white;
+  padding: 4.5rem 2rem;
+  border-radius: 2rem;
+  box-shadow:
+    0 0 0 2px #1f2933,
+    0 0 0 6px #c9a227;
+}
+
+.cta .marqueeLabel {
+  color: #c9a227;
 }
 
 .cta h2 {
-  font-family:Georgia,serif;
-  font-size:2rem;
+  font-family: Georgia, serif;
+  font-size: 2.1rem;
+  margin: 0 0 0.75rem;
 }
 
 .cta p {
-  color:#d1d5db;
-  margin-bottom:2rem;
+  color: #d1d5db;
+  margin-bottom: 2rem;
 }
 
 .message,
 .error {
-  text-align:center;
-  padding:3rem;
+  text-align: center;
+  padding: 3rem;
 }
 
 .error {
-  color:#b91c1c;
+  color: #b91c1c;
 }
 
-@media(max-width:768px){
-  .hero h1 {
-    font-size:2.2rem;
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .ticket {
+    grid-template-columns: 1fr;
   }
 
-  .features {
-    grid-template-columns:1fr;
+  .ticketPoster,
+  .posterPlaceholder {
+    min-height: 220px;
+  }
+
+  .perforation {
+    display: none;
+  }
+
+  .ticketInfo {
+    padding: 2.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .ticketInfo h1 {
+    font-size: 1.9rem;
+  }
+
+  .rooms {
+    grid-template-columns: 1fr;
   }
 
   .sectionHeader {
-    flex-direction:column;
-    align-items:flex-start;
-    gap:1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .stamp {
+    display: none;
   }
 }

@@ -96,7 +96,6 @@ function ProductsPage() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className={styles.search}
-          style={{ marginBottom: 0, flex: "1 1 300px" }}
         />
 
         <select

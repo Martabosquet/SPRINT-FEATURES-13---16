@@ -115,8 +115,8 @@ export default function RegisterPage() {
                     error={errors.confirmPassword}
                 />
 {/* 
-                <div className={styles.field} style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    <label htmlFor="profileImage" style={{ fontSize: '14px', fontWeight: '500' }}>Foto de perfil (opcional):</label>
+                <div className={styles.field}>
+                    <label htmlFor="profileImage">Foto de perfil (opcional):</label>
                     <input
                         id="profileImage"
                         type="file"

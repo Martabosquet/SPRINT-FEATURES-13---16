@@ -13,6 +13,9 @@ import CartPage from '../pages/CartPage/CartPage';
 import WishlistPage from '../pages/WishlistPage/WishlistPage';
 import CheckoutPage from '../pages/CheckoutPage/CheckoutPage';
 import CheckoutSuccessPage from '../pages/CheckoutSuccessPage/CheckoutSuccessPage';
+import PrivacyPage from '../pages/PrivacyPage/PrivacyPage';
+import CookiesPage from '../pages/CookiesPage/CookiesPage';
+import LegalNoticePage from '../pages/LegalNoticePage/LegalNoticePage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import { authStorage } from '../utils/authStorage';
 
@@ -123,6 +126,18 @@ export const router = createBrowserRouter([
             <CheckoutSuccessPage />
           </ProtectedRoute>
         )
+      },
+      {
+        path: 'privacidad',
+        element: <PrivacyPage />
+      },
+      {
+        path: 'cookies',
+        element: <CookiesPage />
+      },
+      {
+        path: 'aviso-legal',
+        element: <LegalNoticePage />
       },
       {
         path: '*',

@@ -127,7 +127,7 @@ export default function RatingSummary({ reviews = [] }) {
                 <div
                   className={styles.bar}
                   style={{
-                    width: `${percentage}%`,
+                    '--bar-width': `${percentage}%`,
                   }}
                 />
 

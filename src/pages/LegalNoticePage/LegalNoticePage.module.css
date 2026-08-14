@@ -1,0 +1,53 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+}
+
+.title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.updated {
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-bottom: 2rem;
+}
+
+.section {
+    margin-bottom: 2rem;
+    line-height: 1.7;
+}
+
+.section h2 {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+}
+
+.section ul {
+    padding-left: 1.25rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.75rem;
+}
+
+.table th,
+.table td {
+    border: 1px solid #e2e8f0;
+    padding: 0.6rem;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.back {
+    margin-top: 2rem;
+}
+
+.back a {
+    color: #8b5e3c;
+    text-decoration: none;
+}

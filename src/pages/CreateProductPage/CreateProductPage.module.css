@@ -106,3 +106,23 @@
     color: #111111;
     text-decoration: underline;
 }
+
+.fileInput {
+    padding: 0.5rem;
+}
+
+.selectedFileText {
+    color: #666;
+    font-size: 0.875rem;
+}
+
+.backLinkContainer {
+    margin-top: 1.5rem;
+}
+
+.currentImage {
+    width: 120px;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    object-fit: cover;
+}

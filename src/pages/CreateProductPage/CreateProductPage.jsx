@@ -110,10 +110,9 @@ export default function CreateProductPage() {
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className={styles.input}
-            style={{ padding: '0.5rem' }}
+            className={`${styles.input} ${styles.fileInput}`}
           />
-          {imageFile && <small style={{ color: '#666' }}>Archivo seleccionado: {imageFile.name}</small>}
+          {imageFile && <small className={styles.selectedFileText}>Archivo seleccionado: {imageFile.name}</small>}
         </div>
 
         <FormInput
@@ -130,7 +129,7 @@ export default function CreateProductPage() {
         </button>
       </form>
 
-      <div style={{ marginTop: '1.5rem' }}>
+      <div className={styles.backLinkContainer}>
         <Link to="/products" className={styles.backLink}>&larr; Volver al catálogo</Link>
       </div>
     </div>

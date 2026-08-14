@@ -62,6 +62,7 @@
 
 .bar {
   height: 100%;
+  width: var(--bar-width, 0%);
   background: var(--color-primary);
   border-radius: inherit;
 }
