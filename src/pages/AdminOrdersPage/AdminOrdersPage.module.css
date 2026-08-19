@@ -1,0 +1,70 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem;
+}
+
+.container h2 {
+    font-family: Georgia, serif;
+    color: #1f2933;
+    margin-bottom: 1.5rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border: 1px solid #e7dfd5;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.table th,
+.table td {
+    text-align: left;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid #e7dfd5;
+    font-size: 0.9rem;
+    vertical-align: top;
+}
+
+.table th {
+    background: #faf7f2;
+    color: #8b5e3c;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.mono {
+    font-family: "Courier New", monospace;
+    color: #64748b;
+}
+
+.itemList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.statusSelect {
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e7dfd5;
+    font-size: 0.85rem;
+}
+
+.message,
+.error {
+    text-align: center;
+    padding: 3rem;
+}
+
+.error {
+    color: #b91c1c;
+}
+
+.backLink {
+    color: #8b5e3c;
+    text-decoration: none;
+}

@@ -17,3 +17,14 @@ export async function getOrderByPaymentIntent(paymentIntentId) {
   const response = await apiClient.get(`/api/orders/by-payment-intent/${paymentIntentId}`);
   return response.data;
 }
+
+// Rutas exclusivas de administración
+export async function getAllOrdersAdmin() {
+  const response = await apiClient.get('/api/admin/orders');
+  return response.data;
+}
+
+export async function updateOrderStatusAdmin(orderId, status) {
+  const response = await apiClient.patch(`/api/admin/orders/${orderId}/status`, { status });
+  return response.data;
+}

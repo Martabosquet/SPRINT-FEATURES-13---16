@@ -19,7 +19,7 @@
 }
 
 .title {
-    font-size: clamp(2rem,4vw,3rem);
+    font-size: clamp(2rem, 4vw, 3rem);
     color: #2d2d2d;
     margin-bottom: 1rem;
 }
@@ -31,19 +31,20 @@
     line-height: 1.7;
 }
 
-.filtersBar {  /* Contenedor flexible para poner la barra de búsqueda y el select alineados */
-    display:flex;
-    gap:1rem;
-    flex-wrap:wrap;
-    justify-content:center;
-    margin-bottom:1rem;
+.filtersBar {
+    /* Contenedor flexible para poner la barra de búsqueda y el select alineados */
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 1rem;
 }
 
-.results{
-    text-align:center;
-    color:#777;
-    margin-bottom:2rem;
-    font-weight:500;
+.results {
+    text-align: center;
+    color: #777;
+    margin-bottom: 2rem;
+    font-weight: 500;
 }
 
 .no-results {
@@ -52,21 +53,21 @@
     margin-top: 2rem;
 }
 
-.search{
+.search {
     flex: 1 1 300px;
     margin-bottom: 0;
-    min-width:280px;
-    max-width:500px;
+    min-width: 280px;
+    max-width: 500px;
 
-    padding:.9rem 1rem;
+    padding: .9rem 1rem;
 
-    border-radius:12px;
+    border-radius: 12px;
 
-    border:1px solid #ddd;
+    border: 1px solid #ddd;
 
-    background:white;
+    background: white;
 
-    transition:.25s;
+    transition: .25s;
 }
 
 .search:focus {
@@ -74,24 +75,25 @@
     box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.2);
 }
 
-.adminActions{
-    display:flex;
-    justify-content:flex-end;
-    margin-bottom:2rem;
+.adminActions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+    gap: 1rem;
 }
 
-.addButton{
-    background:#6f4e37;
-    color:white;
-    text-decoration:none;
-    padding:.9rem 1.3rem;
-    border-radius:12px;
-    transition:.25s;
+.addButton {
+    background: #6f4e37;
+    color: white;
+    text-decoration: none;
+    padding: .9rem 1.3rem;
+    border-radius: 12px;
+    transition: .25s;
 }
 
-.addButton:hover{
-    background:#5a3d2b;
-    transform:translateY(-2px);
+.addButton:hover {
+    background: #5a3d2b;
+    transform: translateY(-2px);
 }
 
 .grid {
@@ -171,26 +173,27 @@
 }
 
 .stock {
-  font-size: 0.85rem;
-  color: #666;
-  margin: 0 0 1rem 0;
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0 0 1rem 0;
 }
 
 .stock strong {
-  color: #2e7d32; /* Un verde sutil para indicar disponibilidad, o puedes usar #111 */
+    color: #2e7d32;
+    /* Un verde sutil para indicar disponibilidad, o puedes usar #111 */
 }
 
 /* Estilo para el desplegable de ordenación, heredando la elegancia de .search */
-.select{
-    width:260px;
+.select {
+    width: 260px;
 
-    border-radius:12px;
+    border-radius: 12px;
 
-    border:1px solid #ddd;
+    border: 1px solid #ddd;
 
-    background:white;
+    background: white;
 
-    padding:.9rem 1rem;
+    padding: .9rem 1rem;
 }
 
 .select:focus {

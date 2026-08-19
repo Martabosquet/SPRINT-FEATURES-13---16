@@ -122,6 +122,9 @@ function ProductsPage() {
           >
             + Nuevo producto
           </Link>
+          <Link to="/admin/orders" className={styles.addButton}>
+            📦 Gestionar pedidos
+          </Link>
         </div>
       )}
 
