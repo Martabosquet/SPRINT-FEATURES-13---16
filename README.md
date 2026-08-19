@@ -2,13 +2,12 @@
 
 Proyecto de e-commerce Full Stack desarrollado como parte del **Módulo 3 (Full Stack Developer + IA)** en **The Bridge**.
 
-El proyecto evoluciona la base construida en sprints anteriores (catálogo, auth, carrito, wishlist, checkout, Redux Toolkit, deploy) hacia un producto de nivel profesional que incluye **panel de administración con CRUD real, autenticación basada en Cookies HttpOnly entre dominios, control estricto de roles (`ADMIN` vs `USER`), subida de imágenes a Cloudinary, pasarela de pagos con Stripe Elements y Webhooks idempotentes, documentación OpenAPI/Swagger y refactorización modular CSS (CSS Modules)**.
+El proyecto evoluciona la base construida en sprints anteriores (catálogo, auth, carrito, wishlist, checkout, Redux Toolkit, deploy) hacia un producto de nivel profesional que incluye **panel de administración con CRUD real, autenticación basada en Cookies HttpOnly entre dominios, control estricto de roles (`ADMIN` vs `USER`), subida de imágenes a Cloudinary, pasarela de pagos con Stripe Elements y Webhooks idempotentes, documentación OpenAPI/Swagger, optimizaciones de rendimiento con `useMemo` y refactorización modular CSS (CSS Modules)**.
 
 ---
 
 ## 📚 Índice
 
-- [Checklist de Criterios de Evaluación Cumplidos](#-checklist-de-criterios-de-evaluación-cumplidos)
 - [Matriz de Permisos por Rol (ADMIN vs USER)](#-matriz-de-permisos-por-rol-admin-vs-user)
 - [Estructura del Repositorio](#-estructura-del-repositorio)
 - [Stack Tecnológico](#-stack-tecnológico)
@@ -17,6 +16,7 @@ El proyecto evoluciona la base construida en sprints anteriores (catálogo, auth
 - [Decisiones de Seguridad y Mejores Prácticas](#-decisiones-de-seguridad-y-mejores-prácticas)
 - [Pasarela de Pagos Stripe & Webhooks](#-pasarela-de-pagos-stripe--webhooks)
 - [Estilos y Arquitectura CSS (CSS Modules)](#-estilos-y-arquitectura-css-css-modules)
+- [Optimización de Rendimiento Frontend (useMemo)](#-optimización-de-rendimiento-frontend-usememo--react-best-practices)
 - [Documentación API (Swagger / OpenAPI)](#-documentación-api-swagger--openapi)
 - [Testing y Calidad de Código](#-testing-y-calidad-de-código)
 - [Variables de Entorno](#-variables-de-entorno)
@@ -24,19 +24,6 @@ El proyecto evoluciona la base construida en sprints anteriores (catálogo, auth
 - [Despliegue en Producción](#-despliegue-en-producción)
 
 ---
-
-## 📋 Checklist de Criterios de Evaluación Cumplidos
-
-| Criterio de Evaluación | Estado | Implementación y Evidencia Técnica |
-| :--- | :---: | :--- |
-| **1. Backend Robusto y Adaptado** | ✅ Cumplido | Express con `authMiddleware` leyendo cookies `httpOnly`, control estricto de roles (`requireRole('admin')`), endpoints para Stripe (`/api/checkout`, `/api/webhooks/stripe`) y Multer/Cloudinary. Manejador de errores centralizado (`errorHandler.js`) que procesa errores de Prisma (`P2002`, `P2025`), JWT y validaciones con respuestas semánticas JSON y códigos HTTP adecuados (400, 401, 403, 404, 409, 500). |
-| **2. Frontend Completo y Estructurado** | ✅ Cumplido | Estado global centralizado con Redux Toolkit (`authSlice`, `cartSlice`, `wishlistSlice`). Panel Admin con CRUD completo exclusivo para administradores (`CreateProductPage`, `EditProductPage`, `ProductsPage`). Rutas protegidas por rol con guardias `AdminRoute` y `ProtectedRoute`. Formularios reutilizables (`FormInput`, `Button`) con validación y mensajes claros. |
-| **3. Integración Profesional Completa** | ✅ Cumplido | Cliente Axios configurado con `withCredentials: true` e interceptor de respuesta para auto-expiración de sesión ante respuestas `401`. Subida de imágenes a Cloudinary (productos y avatares de perfil). Flujo de pago real con Stripe Elements, sincronización de Redux y feedback UI excelente (`loading`, deshabilitado progresivo, alertas de error). Refactorización completa de estilos inline hacia CSS Modules. |
-| **4. Repositorio Limpio y Documentación** | ✅ Cumplido | Organización en arquitectura monorepo desacoplada. Archivos `.gitignore` en backend y frontend protegiendo claves de API (`.env`), `node_modules` y builds. Documentación OpenAPI/Swagger interactiva disponible en `/api/docs`. |
-| **5. Despliegue en Producción** | ✅ Cumplido | Frontend en Netlify (`https://projectbreak3.netlify.app`) y Backend en Render (`https://project-break-2-t70h.onrender.com`). Conexiones HTTPS, CORS configurado con lista blanca de orígenes y cookies seguras con `SameSite: "none"` y `Secure: true`. |
-
----
-
 ## 🛡️ Matriz de Permisos por Rol (`ADMIN` vs `USER`)
 
 El sistema implementa una estricta separación de privilegios blindada en **dos capas independientes** (Frontend con guardias `AdminRoute` y Backend con middleware `requireRole('admin')`):
@@ -202,6 +189,34 @@ El frontend ha sido completamente refactorizado para eliminar los estilos embebi
 
 ---
 
+## ⚡ Optimización de Rendimiento Frontend (`useMemo` & React Best Practices)
+
+El cliente React implementa **memorización de cómputos pesados** mediante el hook `useMemo` de React para evitar renders innecesarios y mantener una tasa de frames fluida:
+
+1. **Filtrado y Ordenación de Productos (`ProductsPage.jsx`)**:
+   El filtrado por término de búsqueda y la ordenación (por precio o nombre) se encapsulan en `useMemo`. De este modo, la matriz de productos solo se procesa de nuevo cuando cambian explícitamente `products`, `searchTerm` o `sortOrder`, evitando refiltrar en re-renders provocados por otros estados secundarios.
+   ```javascript
+   const sortedProducts = useMemo(() => {
+     const filtered = products.filter((product) =>
+       (product.name || "").toLowerCase().includes(searchTerm.toLowerCase())
+     );
+     return [...filtered].sort((a, b) => /* ordenación asc/desc */);
+   }, [products, searchTerm, sortOrder]);
+   ```
+
+2. **Cálculo de Promedios y Distribución de Notas (`RatingSummary.jsx`)**:
+   El cálculo del promedio global de estrellas y la generación del desglose de puntuaciones tipo IMDb (de 1 a 10 estrellas con `.map()` y `.filter()`) se memorizan basándose en la prop `reviews`, evitando iteraciones redundantes en cada repintado del componente.
+   ```javascript
+   const { averageRating, ratingDistribution } = useMemo(() => {
+     /* cálculo de promedio y distribución de 1 a 10 estrellas */
+   }, [reviews]);
+   ```
+
+3. **Estabilidad Referencial para Componentes Hijas**:
+   Al preservar la referencia del array resultante entre renders, se previenen re-renders innecesarios en componentes hijos que reciben listas de productos o métricas.
+
+---
+
 ## 📄 Documentación API (Swagger / OpenAPI)
 
 El backend expone una interfaz interactiva de Swagger UI donde se pueden probar y consultar todos los endpoints de la API:
@@ -235,22 +250,22 @@ npm test
 ### Backend (`project-break-2-backend/.env`)
 
 ```env
-DATABASE_URL=postgresql://usuario:password@host:5432/dbname?schema=public
-DIRECT_URL=postgresql://usuario:password@host:5432/dbname?schema=public
+DATABASE_URL=
+DIRECT_URL=
 
-MONGODB_URI=mongodb+srv://...
+MONGODB_URI=
 
-CLOUDINARY_CLOUD_NAME=tu_cloud_name
-CLOUDINARY_URL=cloudinary://...
-CLOUDINARY_API_KEY=tu_api_key
-CLOUDINARY_API_SECRET=tu_api_secret
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_URL=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_PUBLIC_KEY=pk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_SECRET_KEY=
+STRIPE_PUBLIC_KEY=
+STRIPE_WEBHOOK_SECRET=
 
-JWT_SECRET=tu_clave_secreta_jwt
-JWT_EXPIRES_IN=7d
+JWT_SECRET=
+JWT_EXPIRES_IN=
 PORT=3000
 NODE_ENV=development
 ```
@@ -258,8 +273,8 @@ NODE_ENV=development
 ### Frontend (`SPRINT-FEATURES-13---16/.env`)
 
 ```env
-VITE_API_URL=http://localhost:3000
-VITE_STRIPE_PUBLIC_KEY=pk_test_...
+VITE_API_URL=
+VITE_STRIPE_PUBLIC_KEY=
 ```
 
 ---

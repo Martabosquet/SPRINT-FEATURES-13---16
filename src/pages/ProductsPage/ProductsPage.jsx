@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { Link } from "react-router-dom"
 import { getProducts } from "../../api/products"
 import ProductCard from "../../components/ProductCard/ProductCard"
@@ -40,26 +40,29 @@ function ProductsPage() {
     );
   };
 
-  const filteredProducts = products.filter((product) => {
-    const productName = product.name || ""
-    return productName.toLowerCase().includes(searchTerm.toLowerCase())
-  })
+  // Memorizamos el filtrado y ordenación para evitar re-calculos innecesarios en re-renders
+  const sortedProducts = useMemo(() => {
+    const filtered = products.filter((product) => {
+      const productName = product.name || ""
+      return productName.toLowerCase().includes(searchTerm.toLowerCase())
+    })
 
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sortOrder === "price-asc") {
-      return Number(a.price) - Number(b.price)
-    }
-    if (sortOrder === "price-desc") {
-      return Number(b.price) - Number(a.price)
-    }
-    if (sortOrder === "name-asc") {
-      return (a.name || "").localeCompare(b.name || "")
-    }
-    if (sortOrder === "name-desc") {
-      return (b.name || "").localeCompare(a.name || "")
-    }
-    return 0;
-  })
+    return [...filtered].sort((a, b) => {
+      if (sortOrder === "price-asc") {
+        return Number(a.price) - Number(b.price)
+      }
+      if (sortOrder === "price-desc") {
+        return Number(b.price) - Number(a.price)
+      }
+      if (sortOrder === "name-asc") {
+        return (a.name || "").localeCompare(b.name || "")
+      }
+      if (sortOrder === "name-desc") {
+        return (b.name || "").localeCompare(a.name || "")
+      }
+      return 0
+    })
+  }, [products, searchTerm, sortOrder])
 
   if (loading) {
     return (

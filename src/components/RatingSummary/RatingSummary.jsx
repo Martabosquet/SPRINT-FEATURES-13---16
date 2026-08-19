@@ -1,8 +1,31 @@
+import { useMemo } from 'react';
 import StarRating from '../StarRating/StarRating';
 import styles from './RatingSummary.module.css';
 
 
 export default function RatingSummary({ reviews = [] }) {
+
+  const { totalReviews, averageRating, roundedAverage, ratingDistribution } = useMemo(() => {
+    if (!reviews.length) {
+      return { totalReviews: 0, averageRating: 0, roundedAverage: 0, ratingDistribution: [] };
+    }
+
+    const total = reviews.length;
+    const avg = reviews.reduce((sum, review) => sum + Number(review.rating || 0), 0) / total;
+    const rounded = Number(avg.toFixed(1));
+
+    const distribution = Array.from({ length: 11 }, (_, index) => 10 - index).map((rating) => {
+      const count = reviews.filter((review) => Math.round(Number(review.rating)) === rating).length;
+      return { rating, count };
+    });
+
+    return {
+      totalReviews: total,
+      averageRating: avg,
+      roundedAverage: rounded,
+      ratingDistribution: distribution,
+    };
+  }, [reviews]);
 
   if (!reviews.length) {
     return (
@@ -13,45 +36,6 @@ export default function RatingSummary({ reviews = [] }) {
       </section>
     );
   }
-
-
-  const totalReviews = reviews.length;
-
-
-  const averageRating =
-    reviews.reduce(
-      (sum, review) =>
-        sum + Number(review.rating || 0),
-      0
-    ) / totalReviews;
-
-
-  const roundedAverage =
-    Number(averageRating.toFixed(1));
-
-
-  /*
-    Creamos una distribución de notas.
-    Esto nos permite dibujar las barras
-    tipo IMDb.
-  */
-  const ratingDistribution = Array.from(
-    { length: 11 },
-    (_, index) => 10 - index
-  ).map((rating) => {
-
-    const count = reviews.filter(
-      (review) =>
-        Math.round(Number(review.rating)) === rating
-    ).length;
-
-
-    return {
-      rating,
-      count,
-    };
-
-  });
 
 
   const getMessage = () => {
