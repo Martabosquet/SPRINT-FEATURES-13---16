@@ -11,6 +11,7 @@ import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import PublicProfilePage from '../pages/PublicProfilePage/PublicProfilePage';
 import CartPage from '../pages/CartPage/CartPage';
 import AdminOrdersPage from '../pages/AdminOrdersPage/AdminOrdersPage';
+import AdminUsersPage from '../pages/AdminUsersPage/AdminUsersPage';
 import WishlistPage from '../pages/WishlistPage/WishlistPage';
 import CheckoutPage from '../pages/CheckoutPage/CheckoutPage';
 import CheckoutSuccessPage from '../pages/CheckoutSuccessPage/CheckoutSuccessPage';
@@ -136,7 +137,14 @@ export const router = createBrowserRouter([
           </AdminRoute>
         )
       },
-
+      {
+        path: 'admin/users',
+        element: (
+          <AdminRoute>
+            <AdminUsersPage />
+          </AdminRoute>
+        )
+      },
       {
         path: 'privacidad',
         element: <PrivacyPage />

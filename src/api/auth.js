@@ -44,11 +44,26 @@ export const deleteAccount = async () => {
 
 //Actualizar perfil cinéfilo
 export const updateCinephileProfile = async (data) => {
-  return api.patch('/api/profile/cinephile', data);
+    return api.patch('/api/profile/cinephile', data);
 };
 
 // Obtiene el perfil público de otro usuario por su id
 export const getPublicProfile = async (userId) => {
-  const response = await api.get(`/api/users/${userId}`);
-  return response.data;
+    const response = await api.get(`/api/users/${userId}`);
+    return response.data;
+};
+
+export const getAllUsersAdmin = async () => {
+    const response = await api.get('/api/admin/users');
+    return response.data;
+};
+
+export const updateUserRoleAdmin = async (userId, role) => {
+    const response = await api.patch(`/api/admin/users/${userId}/role`, { role });
+    return response.data;
+};
+
+export const deleteUserByAdmin = async (userId) => {
+    const response = await api.delete(`/api/admin/users/${userId}`);
+    return response.data;
 };
